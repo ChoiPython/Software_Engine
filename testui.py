@@ -28,3 +28,5 @@ mainui.resizable(False, False)
 
 
 mainui.mainloop()
+### 수정
+print("hello World!")
