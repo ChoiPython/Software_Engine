@@ -1,3 +1,6 @@
-print("Hello World!")
-print("Hello World!")
-print("Hello World!")
+from tkinter import *
+from User_main_boundary import *
+
+
+
+ShowUser = User_main()
