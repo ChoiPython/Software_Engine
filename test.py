@@ -39,6 +39,8 @@ class Menu_Add:
 
     def getMenu():
         print("메뉴를 조회하였습니다.")
+
+        #아아앙ㅇㅇㅇㅇ아아아아아앙앙앙
         
 
 
@@ -47,6 +49,18 @@ menu_add = Menu_Add()
 menu_add.getMenu()
 menu_add.Menu_Add()
 
+# github 테스트
+# github 테스트2
+# 작업수행
+# 수정
+# github 테스트
+# github 테스트2
+# 작업수행
+# 수정
+# github 테스트
+# github 테스트2
+# 작업수행
+# 수정
 # github 테스트
 # github 테스트2
 # 작업수행
