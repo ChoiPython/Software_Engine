@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
-from option import OptionPopup  # 옵션창 코드 import
+from Opttion_add_boundary import OptionPopup  # 옵션창 코드 import
 
 class MenuForm(tk.Tk):
     def __init__(self):
