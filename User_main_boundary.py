@@ -1,18 +1,18 @@
 from tkinter import *
+from PIL import Image, ImageTk
 
 class User_main:
     def __init__(self):
         self.user_window = Tk()
         self.user_window.title("사용자 메인화면")
         self.user_window.geometry("1200x800+300+100")
-        self.user_window.resizable(True, True)
+        self.user_window.resizable(False, False)
         self.ShowUi()       # 화면 출력
         self.scrollable_frame = self.y_scrollable_frame()        # 스크롤바 생성
         self.ShowWidget()   # 위젯 출력
         self.setMenu()      # 메뉴 출력
         self.user_window.mainloop()
-        # for i in range(50):
-        #         Label(scrollable_content, text=f"항목 {i+1}").pack()
+
 
     # 프레임 세팅
     def ShowUi(self):
@@ -22,7 +22,7 @@ class User_main:
         self.right_bottom_frame = self.setFrame_pack(self.right_frame, 'bottom', 1000, 100)    # 우측 하단 프레임
         self.right_top_frame = self.setFrame_pack(self.right_frame, 'top',1000, 600)           # 우측 상단 프레임
 
-        self.setlabel(self.head_frame, '테이블 1', 10, 1)         # 테이블 번호 라벨
+        self.setlabel(self.head_frame, 'left', '테이블 1', 10, 1)         # 테이블 번호 라벨
 
     def setMenu(self):              # 메뉴 생성 함수
         # right_top_frame1 = setFrame_grid(right_top_frame, 250, 250, 0, 0)      # , background="#C1FFD4"
@@ -32,8 +32,12 @@ class User_main:
             row = i // 4
             col = i % 4
 
-            self.setFrame_grid(self.scrollable_frame, 220, 230, row, col)
-    
+            frame = self.setFrame_grid(self.scrollable_frame, 220, 230, row, col)
+            self.setlabel(frame, 'top', None, 220, 150, img ='test2.jpg')           # 메뉴 이미지 생성
+            self.setlabel(frame, 'top', f'메뉴명{i}',10, 1, anc='w', t_font=("맑은고딕", 13))           # 메뉴명 라벨 생성 
+            self.setlabel(frame, 'top', f'가격: {000}',10, 1, anc='w', t_font=("맑은고딕", 13))         # 메뉴 가격 라벨 생성
+            self.setButton(frame, 'right', '담기', 10, 1, x=10, y=5)                # 담기 버튼 생성
+            #def setButton(self, frame, pos, txt, wid, hei, x=10, y=3)
 
     def ShowWidget(self):
         # 카테고리 버튼 배치
@@ -45,14 +49,23 @@ class User_main:
         self.setCateBtn(self.left_frame, 'top', self.cate[4], 15, 3, y=20)
 
         # 결제오쳥, 장바구니, 주문목록 버튼 배치
-        self.setButton(self.right_bottom_frame, 'right', '결제요청', 15, 3, x=10, y=0)
-        self.setButton(self.right_bottom_frame, 'right', '장바구니', 15, 3, x=10, y=0)
-        self.setButton(self.right_bottom_frame, 'right', '주문목록', 15, 3, x=10, y=0)
+        self.setButton(self.right_bottom_frame, 'right', '주문목록', 15, 3, x=10, y=10)
+        self.setButton(self.right_bottom_frame, 'right', '장바구니', 15, 3, x=10, y=10)
+        self.setButton(self.right_bottom_frame, 'right', '결제요청', 15, 3, x=10, y=10)
 
     # 라벨 생성
-    def setlabel(self, frame, txt, wid, hei, t_font=("맑은고딕", 20)):             # 라벨 생성 함수
-        label = Label(frame, text = txt, width=wid, height=hei, font=t_font)
-        label.pack(side = "left")
+    def setlabel(self, frame, pos, txt, wid, hei, anc=None, t_font=("맑은고딕", 20), img = None):             # 라벨 생성 함수
+        label = Label(frame, text = txt, width=wid, height=hei, font=t_font)    #, relief='solid', bd=1
+        if img != None:
+            set_img = Image.open(img).resize((220,150))
+            img_adr = ImageTk.PhotoImage(set_img)
+            label.config(image=img_adr)
+            label.image = img_adr
+
+        if anc != None:
+            label.config(anchor=anc)
+        
+        label.pack(side = pos, fill = 'x')
         
     # pcak로 생성하는 프레임
     def setFrame_pack(self, frame, pos, wid, hei):             # 프레임 생성 함수
@@ -60,25 +73,20 @@ class User_main:
         frame.pack(side = pos)
         frame.pack_propagate(False)
         frame.grid_propagate(False)
-        return frame
-    
-    def setFrame_pack_top(self, frame, pos, wid, hei):             # 프레임 생성 함수
-        frame = Frame(frame, width = wid, height=hei, relief="solid", bd = 0.5)    #, background="#C1FFD4"
-        frame.pack(side = pos)
-        frame.pack_propagate(False)
-        frame.grid_propagate(False)
-        return frame
-    
+        return frame    
 
     # grid로 생성하는 프레임
     def setFrame_grid(self, frame, wid, hei, row, col):
-        frame = Frame(frame, width = wid, height = hei, relief="solid", bd = 0.5, background="#C1FFD4")
+        frame = Frame(frame, width = wid, height = hei, relief="solid", bd = 0.5)   # , background="#C1FFD4"
         frame.grid(row = row, column= col, padx = 10, pady = 10)
-        frame.grid_propagate(False)
+        frame.pack_propagate(False)
+        return frame
 
     # 버튼 생성 함수
-    def setButton(self, frame, pos, txt, wid, hei, x=10, y=3):            # 버튼 생성 함수
-        button = Button(frame, text=txt, width=wid, height=hei)
+    def setButton(self, frame, pos, txt, wid, hei, anc=None, x=10, y=3):            # 버튼 생성 함수
+        button = Button(frame, text=txt, width=wid, height=hei, relief='solid', bd=0.5)
+        if anc != None:
+            button.config(anchor=anc)
         button.pack(side=pos, padx = x, pady = y)
         return button
     
@@ -95,6 +103,7 @@ class User_main:
         # right_top_frame은 pack으로 관리되므로, 이 컨테이너도 pack으로 배치합니다.
         canvas_scrollbar_container = Frame(self.right_top_frame)
         canvas_scrollbar_container.pack(fill="both", expand=True)
+        # canvas_scrollbar_container.pack_propagate(False)
 
         # 캔버스 생성 (부모를 canvas_scrollbar_container로 변경)
         canvas = Canvas(canvas_scrollbar_container, bg="white")
