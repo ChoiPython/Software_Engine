@@ -10,7 +10,7 @@ class User_main:
         self.ShowUi()       # 화면 출력
         self.scrollable_frame = self.y_scrollable_frame()        # 스크롤바 생성
         self.ShowWidget()   # 위젯 출력
-        self.setMenu()      # 메뉴 출력
+        self.setMenu('test.jpg')      # 메뉴 출력
         self.user_window.mainloop()
 
 
@@ -22,36 +22,38 @@ class User_main:
         self.right_bottom_frame = self.setFrame_pack(self.right_frame, 'bottom', 1000, 100)    # 우측 하단 프레임
         self.right_top_frame = self.setFrame_pack(self.right_frame, 'top',1000, 600)           # 우측 상단 프레임
 
-        self.setlabel(self.head_frame, 'left', '테이블 1', 10, 1)         # 테이블 번호 라벨
+        self.table_num = self.setlabel(self.head_frame, 'left', '테이블 1', 10, 1, anc = 'w')         # 테이블 번호 라벨
 
-    def setMenu(self):              # 메뉴 생성 함수
-        # right_top_frame1 = setFrame_grid(right_top_frame, 250, 250, 0, 0)      # , background="#C1FFD4"
+    def setMenu(self, category):              # 메뉴 생성 함수
         menu = list(range(20))  # 메뉴 수
 
         for i in range(len(menu)):
-            row = i // 4
+            row = i // 4    # 4개씩 출력
             col = i % 4
 
             frame = self.setFrame_grid(self.scrollable_frame, 220, 230, row, col)
-            self.setlabel(frame, 'top', None, 220, 150, img ='test2.jpg')           # 메뉴 이미지 생성
+            self.setlabel(frame, 'top', None, 220, 150, img =category)           # 메뉴 이미지 생성
             self.setlabel(frame, 'top', f'메뉴명{i}',10, 1, anc='w', t_font=("맑은고딕", 13))           # 메뉴명 라벨 생성 
             self.setlabel(frame, 'top', f'가격: {000}',10, 1, anc='w', t_font=("맑은고딕", 13))         # 메뉴 가격 라벨 생성
-            self.setButton(frame, 'right', '담기', 10, 1, x=10, y=5)                # 담기 버튼 생성
-            #def setButton(self, frame, pos, txt, wid, hei, x=10, y=3)
+            self.add_cart_bt = self.setButton(frame, 'right', '담기', 10, 1, x=10, y=5)                # 담기 버튼 생성
+            self.add_cart_bt.config(command=self.add_cart_event)
 
     def ShowWidget(self):
         # 카테고리 버튼 배치
         self.cate = ['카테고리1', '카테고리2', '카테고리3', '카테고리4', '카테고리5']
-        self.setCateBtn(self.left_frame, 'top', self.cate[0], 15, 3, y=20)
-        self.setCateBtn(self.left_frame, 'top', self.cate[1], 15, 3, y=20)
-        self.setCateBtn(self.left_frame, 'top', self.cate[2], 15, 3, y=20)
-        self.setCateBtn(self.left_frame, 'top', self.cate[3], 15, 3, y=20)
-        self.setCateBtn(self.left_frame, 'top', self.cate[4], 15, 3, y=20)
+        for i in range(len(self.cate)):
+            self.setCateBtn(self.left_frame, 'top', self.cate[i], 15, 3, y=20)
+            pass
 
-        # 결제오쳥, 장바구니, 주문목록 버튼 배치
-        self.setButton(self.right_bottom_frame, 'right', '주문목록', 15, 3, x=10, y=10)
-        self.setButton(self.right_bottom_frame, 'right', '장바구니', 15, 3, x=10, y=10)
-        self.setButton(self.right_bottom_frame, 'right', '결제요청', 15, 3, x=10, y=10)
+        # 결제요청, 장바구니, 주문목록 버튼 배치
+        self.orderlistui_bt = self.setButton(self.right_bottom_frame, 'right', '주문목록', 15, 3, x=10, y=10)
+        self.cart_bt =  self.setButton(self.right_bottom_frame, 'right', '장바구니', 15, 3, x=10, y=10)
+        self.req_pay_bt = self.setButton(self.right_bottom_frame, 'right', '결제요청', 15, 3, x=10, y=10)
+
+        # 버튼별 함수 지정
+        self.orderlistui_bt.config(command=self.orderlistui_event)
+        self.cart_bt.config(command=self.cart_event)
+        self.req_pay_bt.config(command=self.req_pay_event)
 
     # 라벨 생성
     def setlabel(self, frame, pos, txt, wid, hei, anc=None, t_font=("맑은고딕", 20), img = None):             # 라벨 생성 함수
@@ -66,6 +68,8 @@ class User_main:
             label.config(anchor=anc)
         
         label.pack(side = pos, fill = 'x')
+
+        return label
         
     # pcak로 생성하는 프레임
     def setFrame_pack(self, frame, pos, wid, hei):             # 프레임 생성 함수
@@ -90,12 +94,43 @@ class User_main:
         button.pack(side=pos, padx = x, pady = y)
         return button
     
+
     # 카테고리 버튼 생성 함수
     def setCateBtn(self, frame, pos, txt, wid, hei, x=10, y=3):            # 버튼 생성 함수
-        button = Button(frame, text=txt, width=wid, height=hei)
-        button.pack(side=pos, padx = x, pady = y)
-        return button
+        cate_bt = Button(frame, text=txt, width=wid, height=hei, command = lambda b = txt : self.cate_event(b))
+        cate_bt.pack(side=pos, padx = x, pady = y)
+
+        return cate_bt
+    
+    # 카테고리 버튼 이벤트  카테고리별 이름을 가져와서 메뉴를 출력할 예정
+    def cate_event(self, txt):
+        if txt == '카테고리1':
+            txt = 'test.jpg'
+        else:
+            txt = 'test2.jpg'
+
+        self.setMenu(category=txt)
+        pass
+
+    # 담기 버튼 이벤트
+    def add_cart_event(self):
+        print("장바구니에 담기")
+
+    # 결제 요청 버튼 이벤트
+    def req_pay_event(self):
+        print("결제를 요청하셨습니다.")
+    
+    # 장바구니 버튼 이벤트
+    def cart_event(self):
+        print("장바구니가 열림")
+
+    # 주문목록 버튼 이벤트
+    def orderlistui_event(self):
+        print("주문목록 화면이 열림")    
+
+
         
+
 
     # 세로 스크롤 가능한 프레임을 설정하는 함수 (GPT & 제미나이 사용)
     def y_scrollable_frame(self):
@@ -150,3 +185,14 @@ class User_main:
 
 if __name__ == "__main__":
     mainui = User_main()
+
+
+
+
+'''
+1. 카테고리 버튼에 대한 변수가 필요없어진 상황
+2. DB에서 메뉴 정보를 불러오기
+3. 결제 요청되었습니다. 메시지 출력하기
+4. 장바구니, 주문목록 화면 출력하기 (지훈 님이랑 형우 님이 완료하면 import시켜서 열기만 하면 됨)
+5. 불러온 데이터로 메뉴 화면 띄우는거, 테이블 번호 레이블 바꾸는 거 하기.
+'''
