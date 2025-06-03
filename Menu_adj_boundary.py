@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
-from Option_add_baundary import OptionPopup  # 옵션창 코드 import
+from Option_add_boundary import OptionPopup  # 옵션창 코드 import
 
 class MenuForm(tk.Tk):
     def __init__(self):
@@ -54,6 +54,7 @@ class MenuForm(tk.Tk):
         self.menu_add_bt = tk.Button(self, text="등록", width=10, relief="solid", borderwidth=1, command=self.submit)
         self.menu_add_bt.place(x=480, y=240)
 
+    # 아래 메서드들은 반드시 __init__ 밖에서 클래스의 메서드로 정의!
     def select_photo(self):
         file_path = filedialog.askopenfilename(
             filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.ico")]
