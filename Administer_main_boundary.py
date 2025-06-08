@@ -1,7 +1,7 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from getMenu import *
-# from Menu_adj_main_boundary import *
+from Menu_adj_main_boundary import *
 from Menu_del_boundary import *
 
 class Administer_main:
@@ -132,8 +132,8 @@ class Administer_main:
     # 메뉴 수정 버튼 이벤트
     def menu_adjui_event(self):
         print("메뉴 수정 버튼을 눌렀습니다.")
-        # menu_adjui = Menu_del()
-
+        menu_adjui = Menu_adj()
+        menu_adjui.menu_adj_window.grab_set()
 
     # 메뉴 삭제 버튼 이벤트
     def menu_delui_event(self):
