@@ -8,7 +8,7 @@ class Administer_main:
     
     def __init__(self):
         self.data = getMenu()
-        self.Menu_list = self.data.get()
+        self.Menu_list = self.data.getMenu()
 
         self.admin_main_window = Tk()
         self.admin_main_window.title("관리자 메인화면")
