@@ -7,7 +7,7 @@ class Menu_del:
     
     def __init__(self):
         self.data = getMenu()               
-        self.Menu_list = self.data.get()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
+        self.Menu_list = self.data.getMenu()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
 
         self.menu_del_window = Toplevel()
         self.menu_del_window.title("메뉴 삭제 화면")
@@ -31,7 +31,7 @@ class Menu_del:
         self.table_num = self.setlabel(self.head_frame, 'left', '메뉴 삭제 화면', 30, 1, anc = 'w')         # 테이블 번호 라벨
 
     def setMenu(self, category = '1.메인메뉴'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
-        self.Menu_list = self.data.get()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
+        self.Menu_list = self.data.getMenu()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
         menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
         for i in range(len(menu)):
             row = i // 4    # 4개씩 출력
