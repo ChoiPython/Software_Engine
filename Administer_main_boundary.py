@@ -10,26 +10,26 @@ class Administer_main:
         self.data = getMenu()
         self.Menu_list = self.data.get()
 
-        self.user_window = Tk()
-        self.user_window.title("관리자 메인화면")
-        self.user_window.geometry("1200x800+300+100")
-        self.user_window.resizable(False, False)
+        self.admin_main_window = Tk()
+        self.admin_main_window.title("관리자 메인화면")
+        self.admin_main_window.geometry("1200x800+300+100")
+        self.admin_main_window.resizable(False, False)
         self.ShowUi()       # 화면 출력
         self.scrollable_frame = self.y_scrollable_frame()        # 스크롤바 생성
         self.ShowWidget()   # 위젯 출력
         self.setMenu()      # 메뉴 출력
-        self.user_window.mainloop()
+        self.admin_main_window.mainloop()
 
 
     # 프레임 세팅
     def ShowUi(self):
-        self.head_frame = self.setFrame_pack(self.user_window, 'top', 1200, 100)               # 상단 프레임
-        self.left_frame = self.setFrame_pack(self.user_window, 'left', 200, 700)               # 좌측 프레임
-        self.right_frame = self.setFrame_pack(self.user_window, 'left', 1000, 700)             # 우측 프레임
+        self.head_frame = self.setFrame_pack(self.admin_main_window, 'top', 1200, 100)               # 상단 프레임
+        self.left_frame = self.setFrame_pack(self.admin_main_window, 'left', 200, 700)               # 좌측 프레임
+        self.right_frame = self.setFrame_pack(self.admin_main_window, 'left', 1000, 700)             # 우측 프레임
         self.right_bottom_frame = self.setFrame_pack(self.right_frame, 'bottom', 1000, 100)    # 우측 하단 프레임
         self.right_top_frame = self.setFrame_pack(self.right_frame, 'top',1000, 600)           # 우측 상단 프레임
 
-        self.table_num = self.setlabel(self.head_frame, 'left', '테이블 1', 10, 1, anc = 'w')         # 테이블 번호 라벨
+        self.table_num = self.setlabel(self.head_frame, 'left', '관리자 메인 화면', 30, 1, anc = 'w')         # 테이블 번호 라벨
 
     def setMenu(self, category = '1.메인메뉴'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
         menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
