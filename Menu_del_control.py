@@ -28,7 +28,7 @@ class Menu_del_control:
 
 
 if __name__ == "__main__":
-    delete_menu = Menu_del()
+    delete_menu = Menu_del_control()
     delete_menu.menu_del('메뉴18')
     # cate = sorted(list((info for info in result if info[0] == '카테고리1')), key = lambda x: x[1])
     # for i in cate :
