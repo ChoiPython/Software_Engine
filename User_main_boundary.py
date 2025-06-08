@@ -29,10 +29,9 @@ class User_main:
 
         self.table_num = self.setlabel(self.head_frame, 'left', '테이블 1', 10, 1, anc = 'w')         # 테이블 번호 라벨
 
-    def setMenu(self, category = '카테고리1'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
+    def setMenu(self, category = '1.메인메뉴'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
         menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
         
-        print(menu)
         for i in range(len(menu)):
             row = i // 4    # 4개씩 출력
             col = i % 4 
@@ -51,10 +50,10 @@ class User_main:
 
     def ShowWidget(self):
         # 카테고리 버튼 배치
-        self.cate = sorted(list(set(cate[0] for cate in self.Menu_list)))   # 카테고리 데이터 불러오기 완료
+        self.cate = sorted(list(set(cate[0] for cate in self.Menu_list)))   # 카테고리 데이터 불러오기 완료 - 순서를 위해 카테고리 데이터에 번호를 붙임
 
-        for i in range(len(self.cate)):
-            self.setCateBtn(self.left_frame, 'top', self.cate[i], 15, 3, y=20)
+        for i in self.cate:
+            self.setCateBtn(self.left_frame, 'top', i, 15, 3, y=20)
             pass
 
         # 결제요청, 장바구니, 주문목록 버튼 배치
@@ -109,7 +108,7 @@ class User_main:
 
     # 카테고리 버튼 생성 함수
     def setCateBtn(self, frame, pos, txt, wid, hei, x=10, y=3):            # 버튼 생성 함수
-        cate_bt = Button(frame, text=txt, width=wid, height=hei, command = lambda b = txt : self.cate_event(b))
+        cate_bt = Button(frame, text=txt.split('.')[1], width=wid, height=hei, command = lambda b = txt : self.cate_event(b))   # 카테고리별 번호는 텍스트에서 제외
         cate_bt.pack(side=pos, padx = x, pady = y)
 
         return cate_bt
