@@ -5,7 +5,8 @@ class getMenu:
     def __init__(self):
         pass
 
-    def get(self):
+    # 메뉴 정보 가져오기
+    def getMenu(self):  
         self.conn = pymysql.connect(host='127.0.0.1', user = 'soft@localhost', password='0000', db='Table_Order')
 
         self.cursor = self.conn.cursor()      # 데이터 조작할 커서 생성
@@ -21,11 +22,28 @@ class getMenu:
 
         return self.result
 
+    # 옵션 정보 가져오기
+    def getOption(self):
+        self.conn = pymysql.connect(host='127.0.0.1', user = 'soft@localhost', password='0000', db='Table_Order')
+
+        self.cursor = self.conn.cursor()      # 데이터 조작할 커서 생성
+        self.select_query = "select * from `option`"    # 전체 데이터 가져오는 쿼리문
+
+        self.cursor.execute(self.select_query)   # 쿼리 입력
+        self.result = self.cursor.fetchall()  # 명령어 결과 튜플로 반환
+
+        self.conn.commit()       # 입력한 데이터 저장하기(데이터 삽입, 수정, 삭제에 사용됨.)
+
+        self.cursor.close()
+        self.conn.close()
+
+        return self.result
+    
 if __name__ == "__main__":
     getmenu = getMenu()
-    result = getmenu.get()
+    result = getmenu.getOption()
     cate = sorted(list((info for info in result if info[0] == '카테고리1')), key = lambda x: x[1])
-    for i in cate :
+    for i in result :
         print(i)
 
 
