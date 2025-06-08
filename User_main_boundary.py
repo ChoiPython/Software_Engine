@@ -1,8 +1,13 @@
 from tkinter import *
 from PIL import Image, ImageTk
+from getMenu import *
 
 class User_main:
+    
     def __init__(self):
+        self.data = getMenu()
+        self.Menu_list = self.data.get()
+
         self.user_window = Tk()
         self.user_window.title("사용자 메인화면")
         self.user_window.geometry("1200x800+300+100")
@@ -10,7 +15,7 @@ class User_main:
         self.ShowUi()       # 화면 출력
         self.scrollable_frame = self.y_scrollable_frame()        # 스크롤바 생성
         self.ShowWidget()   # 위젯 출력
-        self.setMenu('test.jpg')      # 메뉴 출력
+        self.setMenu()      # 메뉴 출력
         self.user_window.mainloop()
 
 
@@ -24,23 +29,30 @@ class User_main:
 
         self.table_num = self.setlabel(self.head_frame, 'left', '테이블 1', 10, 1, anc = 'w')         # 테이블 번호 라벨
 
-    def setMenu(self, category):              # 메뉴 생성 함수
-        menu = list(range(20))  # 메뉴 수
-
+    def setMenu(self, category = '카테고리1'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
+        menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
+        
+        print(menu)
         for i in range(len(menu)):
             row = i // 4    # 4개씩 출력
-            col = i % 4
+            col = i % 4 
+
+            if i == 0:  # 메뉴 프레임 초기화
+                for widget in self.scrollable_frame.winfo_children():
+                    widget.destroy()
 
             frame = self.setFrame_grid(self.scrollable_frame, 220, 230, row, col)
-            self.setlabel(frame, 'top', None, 220, 150, img =category)           # 메뉴 이미지 생성
-            self.setlabel(frame, 'top', f'메뉴명{i}',10, 1, anc='w', t_font=("맑은고딕", 13))           # 메뉴명 라벨 생성 
-            self.setlabel(frame, 'top', f'가격: {000}',10, 1, anc='w', t_font=("맑은고딕", 13))         # 메뉴 가격 라벨 생성
+            self.setlabel(frame, 'top', None, 220, 150, img = menu[i][2])           # 메뉴 이미지 생성
+            self.setlabel(frame, 'top', menu[i][1], 10, 1, anc='w', t_font=("맑은고딕", 13))           # 메뉴명 라벨 생성 
+            self.setlabel(frame, 'top', menu[i][3],10, 1, anc='w', t_font=("맑은고딕", 13))         # 메뉴 가격 라벨 생성
             self.add_cart_bt = self.setButton(frame, 'right', '담기', 10, 1, x=10, y=5)                # 담기 버튼 생성
-            self.add_cart_bt.config(command=self.add_cart_event)
+            self.add_cart_bt.config(command=self.add_cart_event)         
+
 
     def ShowWidget(self):
         # 카테고리 버튼 배치
-        self.cate = ['카테고리1', '카테고리2', '카테고리3', '카테고리4', '카테고리5']
+        self.cate = sorted(list(set(cate[0] for cate in self.Menu_list)))   # 카테고리 데이터 불러오기 완료
+
         for i in range(len(self.cate)):
             self.setCateBtn(self.left_frame, 'top', self.cate[i], 15, 3, y=20)
             pass
@@ -104,12 +116,7 @@ class User_main:
     
     # 카테고리 버튼 이벤트  카테고리별 이름을 가져와서 메뉴를 출력할 예정
     def cate_event(self, txt):
-        if txt == '카테고리1':
-            txt = 'test.jpg'
-        else:
-            txt = 'test2.jpg'
-
-        self.setMenu(category=txt)
+        self.setMenu(txt)
         pass
 
     # 담기 버튼 이벤트
@@ -119,6 +126,7 @@ class User_main:
     # 결제 요청 버튼 이벤트
     def req_pay_event(self):
         print("결제를 요청하셨습니다.")
+        pass
     
     # 장바구니 버튼 이벤트
     def cart_event(self):
@@ -191,8 +199,8 @@ if __name__ == "__main__":
 
 '''
 1. 카테고리 버튼에 대한 변수가 필요없어진 상황
-2. DB에서 메뉴 정보를 불러오기
-3. 결제 요청되었습니다. 메시지 출력하기
+2. DB에서 메뉴 정보를 불러오기   - 구현 o
+3. 결제 요청되었습니다. 메시지 출력하기 - 구현 o
 4. 장바구니, 주문목록 화면 출력하기 (지훈 님이랑 형우 님이 완료하면 import시켜서 열기만 하면 됨)
-5. 불러온 데이터로 메뉴 화면 띄우는거, 테이블 번호 레이블 바꾸는 거 하기.
+5. 불러온 데이터로 메뉴 화면 띄우는거, 테이블 번호 레이블 바꾸는 거 하기.  - 테이블 번호는 구현안해도 되지 않나?
 '''
