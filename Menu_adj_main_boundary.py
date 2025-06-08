@@ -45,8 +45,8 @@ class Menu_del:
             self.setlabel(frame, 'top', None, 220, 150, img = menu[i][2])           # 메뉴 이미지 생성
             self.setlabel(frame, 'top', menu[i][1], 10, 1, anc='w', t_font=("맑은고딕", 13))           # 메뉴명 라벨 생성 
             self.setlabel(frame, 'top', menu[i][3],10, 1, anc='w', t_font=("맑은고딕", 13))         # 메뉴 가격 라벨 생성
-            self.menu_del_bt = self.setButton(frame, 'right', '삭제', 10, 1, x=10, y=5)                # 삭제 버튼 생성
-            self.menu_del_bt.config(command = lambda m = menu[i][:2] : self.menu_del_event(m))         # 카테고리랑, 메뉴이름 넘기기
+            self.menu_adj_bt = self.setButton(frame, 'right', '수정', 10, 1, x=10, y=5)                # 수정 버튼 생성
+            self.menu_adj_bt.config(command = lambda m = menu[i] : self.menu_adj_event(m))         # 메뉴 정보 전부 넘기기
 
 
     def ShowWidget(self):
@@ -115,12 +115,11 @@ class Menu_del:
         self.setMenu(txt)
         pass
 
-    # 메뉴 삭제 버튼 이벤트
-    def menu_del_event(self, menu): # 컨트롤 클래스로 구현하기  - 데이터는 삭제됨 / UI에서는 아직 삭제 안됨.
-        delete = Menu_del_control()
-        delete.menu_del(menu[1])
-        print(f"{menu[1]} 메뉴 삭제")       # menu[1]: 메뉴이름
-        self.setMenu(category=menu[0])      # menu[0]: 카테고리
+    # 메뉴 수정 버튼 이벤트 ★★★ 강지훈 ★★★
+    def menu_adj_event(self, menu): # 컨트롤 클래스로 구현하기  - 데이터는 삭제됨 / UI에서는 아직 삭제 안됨.
+        # menu: ('1.메인메뉴', '닭꼬지', 'test.jpg', 1300, None, 0) 선택한 메뉴 데이터 전부 가져옵니다!
+        print(menu) 
+
 
     # 닫기 버튼 이벤트
     def colose_event(self):     # 닫기 기능 정상 작동
