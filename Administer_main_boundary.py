@@ -1,38 +1,39 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from getMenu import *
-from Menu_del_control import *
+# from Menu_adj_main_boundary import *
+from Menu_del_boundary import *
 
-class Menu_del:
+class Administer_main:
     
     def __init__(self):
-        self.data = getMenu()               
-        self.Menu_list = self.data.get()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
+        self.data = getMenu()
+        self.Menu_list = self.data.get()
 
-        self.menu_del_window = Toplevel()
-        self.menu_del_window.title("메뉴 삭제 화면")
-        self.menu_del_window.geometry("1200x800+300+100")
-        self.menu_del_window.resizable(False, False)
+        self.user_window = Tk()
+        self.user_window.title("관리자 메인화면")
+        self.user_window.geometry("1200x800+300+100")
+        self.user_window.resizable(False, False)
         self.ShowUi()       # 화면 출력
         self.scrollable_frame = self.y_scrollable_frame()        # 스크롤바 생성
         self.ShowWidget()   # 위젯 출력
         self.setMenu()      # 메뉴 출력
-        # self.menu_del_window.mainloop()
+        self.user_window.mainloop()
 
 
     # 프레임 세팅
     def ShowUi(self):
-        self.head_frame = self.setFrame_pack(self.menu_del_window, 'top', 1200, 100)               # 상단 프레임
-        self.left_frame = self.setFrame_pack(self.menu_del_window, 'left', 200, 700)               # 좌측 프레임
-        self.right_frame = self.setFrame_pack(self.menu_del_window, 'left', 1000, 700)             # 우측 프레임
+        self.head_frame = self.setFrame_pack(self.user_window, 'top', 1200, 100)               # 상단 프레임
+        self.left_frame = self.setFrame_pack(self.user_window, 'left', 200, 700)               # 좌측 프레임
+        self.right_frame = self.setFrame_pack(self.user_window, 'left', 1000, 700)             # 우측 프레임
         self.right_bottom_frame = self.setFrame_pack(self.right_frame, 'bottom', 1000, 100)    # 우측 하단 프레임
         self.right_top_frame = self.setFrame_pack(self.right_frame, 'top',1000, 600)           # 우측 상단 프레임
 
-        self.table_num = self.setlabel(self.head_frame, 'left', '메뉴 삭제 화면', 30, 1, anc = 'w')         # 테이블 번호 라벨
+        self.table_num = self.setlabel(self.head_frame, 'left', '테이블 1', 10, 1, anc = 'w')         # 테이블 번호 라벨
 
     def setMenu(self, category = '1.메인메뉴'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
-        self.Menu_list = self.data.get()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
         menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
+        
         for i in range(len(menu)):
             row = i // 4    # 4개씩 출력
             col = i % 4 
@@ -45,23 +46,27 @@ class Menu_del:
             self.setlabel(frame, 'top', None, 220, 150, img = menu[i][2])           # 메뉴 이미지 생성
             self.setlabel(frame, 'top', menu[i][1], 10, 1, anc='w', t_font=("맑은고딕", 13))           # 메뉴명 라벨 생성 
             self.setlabel(frame, 'top', menu[i][3],10, 1, anc='w', t_font=("맑은고딕", 13))         # 메뉴 가격 라벨 생성
-            self.menu_del_bt = self.setButton(frame, 'right', '삭제', 10, 1, x=10, y=5)                # 삭제 버튼 생성
-            self.menu_del_bt.config(command = lambda m = menu[i][:2] : self.menu_del_event(m))         # 카테고리랑, 메뉴이름 넘기기
+            # self.add_cart_bt = self.setButton(frame, 'right', '담기', 10, 1, x=10, y=5)                # 담기 버튼 생성
+            # self.add_cart_bt.config(command=self.add_cart_event)         
 
 
     def ShowWidget(self):
         # 카테고리 버튼 배치
-        self.cate = sorted(list(set(cate[0] for cate in self.Menu_list)))   # 카테고리 데이터 불러오기 완료
+        self.cate = sorted(list(set(cate[0] for cate in self.Menu_list)))   # 카테고리 데이터 불러오기 완료 - 순서를 위해 카테고리 데이터에 번호를 붙임
 
-        for i in range(len(self.cate)):
-            self.setCateBtn(self.left_frame, 'top', self.cate[i], 15, 3, y=20)
+        for i in self.cate:
+            self.setCateBtn(self.left_frame, 'top', i, 15, 3, y=20)
             pass
 
-        # 우 하단 닫기 버튼
-        self.close_bt = self.setButton(self.right_bottom_frame, 'right', '닫기', 15, 3, x=10, y=10)
+        # 결제요청, 장바구니, 주문목록 버튼 배치
+        self.menu_delui_bt = self.setButton(self.right_bottom_frame, 'right', '메뉴 삭제', 15, 3, x=10, y=10)
+        self.menu_adjui_bt =  self.setButton(self.right_bottom_frame, 'right', '메뉴 수정', 15, 3, x=10, y=10)
+        self.menu_addui_bt = self.setButton(self.right_bottom_frame, 'right', '메뉴 등록', 15, 3, x=10, y=10)
 
         # 버튼별 함수 지정
-        self.close_bt.config(command=self.colose_event)
+        self.menu_addui_bt.config(command=self.menu_addui_event)
+        self.menu_adjui_bt.config(command=self.menu_adjui_event)
+        self.menu_delui_bt.config(command=self.menu_delui_event)
 
     # 라벨 생성
     def setlabel(self, frame, pos, txt, wid, hei, anc=None, t_font=("맑은고딕", 20), img = None):             # 라벨 생성 함수
@@ -114,21 +119,27 @@ class Menu_del:
     def cate_event(self, txt):
         self.setMenu(txt)
         pass
+        
+    # 담기 버튼 이벤트
+    def add_cart_event(self):
+        print("장바구니에 담기")
+
+    # 메뉴 등록 버튼 이벤트
+    def menu_addui_event(self):
+        print("메뉴 등록 버튼을 눌렀습니다.")
+        pass
+    
+    # 메뉴 수정 버튼 이벤트
+    def menu_adjui_event(self):
+        print("메뉴 수정 버튼을 눌렀습니다.")
+        # menu_adjui = Menu_del()
+
 
     # 메뉴 삭제 버튼 이벤트
-    def menu_del_event(self, menu): # 컨트롤 클래스로 구현하기  - 데이터는 삭제됨 / UI에서는 아직 삭제 안됨.
-        delete = Menu_del_control()
-        delete.menu_del(menu[1])
-        print(f"{menu[1]} 메뉴 삭제")       # menu[1]: 메뉴이름
-        self.setMenu(category=menu[0])      # menu[0]: 카테고리
-
-    # 닫기 버튼 이벤트
-    def colose_event(self):     # 닫기 기능 정상 작동
-        print("닫기")
-        self.menu_del_window.destroy()
-        pass
-
-
+    def menu_delui_event(self):
+        print("메뉴 삭제 버튼을 눌렀습니다.")    
+        menu_delui = Menu_del()
+        menu_delui.menu_del_window.grab_set()   # 관리자 메인 화면 비활성화
 
         
 
@@ -185,7 +196,7 @@ class Menu_del:
 
 
 if __name__ == "__main__":
-    mainui = Menu_del()
+    mainui = Administer_main()
 
 
 
