@@ -7,31 +7,31 @@ class Menu_adj:
     
     def __init__(self):
         self.data = getMenu()               
-        self.Menu_list = self.data.get()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
+        self.Menu_list = self.data.getMenu()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
 
-        self.menu_del_window = Tk()
-        self.menu_del_window.title("메뉴 수정")
-        self.menu_del_window.geometry("1200x800+300+100")
-        self.menu_del_window.resizable(False, False)
+        self.menu_adj_window = Toplevel()
+        self.menu_adj_window.title("메뉴 수정")
+        self.menu_adj_window.geometry("1200x800+300+100")
+        self.menu_adj_window.resizable(False, False)
         self.ShowUi()       # 화면 출력
         self.scrollable_frame = self.y_scrollable_frame()        # 스크롤바 생성
         self.ShowWidget()   # 위젯 출력
         self.setMenu()      # 메뉴 출력
-        self.menu_del_window.mainloop()
+        # self.menu_adj_window.mainloop()
 
 
     # 프레임 세팅
     def ShowUi(self):
-        self.head_frame = self.setFrame_pack(self.menu_del_window, 'top', 1200, 100)               # 상단 프레임
-        self.left_frame = self.setFrame_pack(self.menu_del_window, 'left', 200, 700)               # 좌측 프레임
-        self.right_frame = self.setFrame_pack(self.menu_del_window, 'left', 1000, 700)             # 우측 프레임
+        self.head_frame = self.setFrame_pack(self.menu_adj_window, 'top', 1200, 100)               # 상단 프레임
+        self.left_frame = self.setFrame_pack(self.menu_adj_window, 'left', 200, 700)               # 좌측 프레임
+        self.right_frame = self.setFrame_pack(self.menu_adj_window, 'left', 1000, 700)             # 우측 프레임
         self.right_bottom_frame = self.setFrame_pack(self.right_frame, 'bottom', 1000, 100)    # 우측 하단 프레임
         self.right_top_frame = self.setFrame_pack(self.right_frame, 'top',1000, 600)           # 우측 상단 프레임
 
-        self.table_num = self.setlabel(self.head_frame, 'left', '메뉴 삭제 화면', 30, 1, anc = 'w')         # 테이블 번호 라벨
+        self.table_num = self.setlabel(self.head_frame, 'left', '메뉴 수정 화면', 30, 1, anc = 'w')         # 테이블 번호 라벨
 
     def setMenu(self, category = '1.메인메뉴'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
-        self.Menu_list = self.data.get()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
+        self.Menu_list = self.data.getMenu()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
         menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
         for i in range(len(menu)):
             row = i // 4    # 4개씩 출력
@@ -124,7 +124,7 @@ class Menu_adj:
     # 닫기 버튼 이벤트
     def colose_event(self):     # 닫기 기능 정상 작동
         print("닫기")
-        self.menu_del_window.destroy()
+        self.menu_adj_window.destroy()
         pass
 
 
