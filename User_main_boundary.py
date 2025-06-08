@@ -1,12 +1,13 @@
 from tkinter import *
 from PIL import Image, ImageTk
+from tkinter import messagebox
 from getMenu import *
 
 class User_main:
     
     def __init__(self):
         self.data = getMenu()
-        self.Menu_list = self.data.get()
+        self.Menu_list = self.data.getMenu()
 
         self.user_window = Tk()
         self.user_window.title("사용자 메인화면")
@@ -45,7 +46,7 @@ class User_main:
             self.setlabel(frame, 'top', menu[i][1], 10, 1, anc='w', t_font=("맑은고딕", 13))           # 메뉴명 라벨 생성 
             self.setlabel(frame, 'top', menu[i][3],10, 1, anc='w', t_font=("맑은고딕", 13))         # 메뉴 가격 라벨 생성
             self.add_cart_bt = self.setButton(frame, 'right', '담기', 10, 1, x=10, y=5)                # 담기 버튼 생성
-            self.add_cart_bt.config(command=self.add_cart_event)         
+            self.add_cart_bt.config(command = lambda m = menu[i] : self.add_cart_event(m))         
 
 
     def ShowWidget(self):
@@ -119,11 +120,15 @@ class User_main:
         pass
 
     # 담기 버튼 이벤트
-    def add_cart_event(self):
+    def add_cart_event(self, menu):
+        # menu: ('1.메인메뉴', '닭꼬지', 'test.jpg', 1300, None, 0)
+        print(menu)
         print("장바구니에 담기")
 
     # 결제 요청 버튼 이벤트
     def req_pay_event(self):
+        messagebox.showinfo("결제요청", "결제가 요청되었습니다.")   # 몇초 후 사라지게 구현??
+        
         print("결제를 요청하셨습니다.")
         pass
     
