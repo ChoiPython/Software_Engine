@@ -3,14 +3,14 @@ from PIL import Image, ImageTk
 from getMenu import *
 from Menu_del_control import *
 
-class Menu_del:
+class Menu_adj:
     
     def __init__(self):
         self.data = getMenu()               
         self.Menu_list = self.data.get()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
 
         self.menu_del_window = Tk()
-        self.menu_del_window.title("사용자 메인화면")
+        self.menu_del_window.title("메뉴 수정")
         self.menu_del_window.geometry("1200x800+300+100")
         self.menu_del_window.resizable(False, False)
         self.ShowUi()       # 화면 출력
@@ -184,15 +184,5 @@ class Menu_del:
 
 
 if __name__ == "__main__":
-    mainui = Menu_del()
+    mainui = Menu_adj()
 
-
-
-
-'''
-1. 카테고리 버튼에 대한 변수가 필요없어진 상황
-2. DB에서 메뉴 정보를 불러오기   - 구현 o
-3. 결제 요청되었습니다. 메시지 출력하기 - 구현 o
-4. 장바구니, 주문목록 화면 출력하기 (지훈 님이랑 형우 님이 완료하면 import시켜서 열기만 하면 됨)
-5. 불러온 데이터로 메뉴 화면 띄우는거, 테이블 번호 레이블 바꾸는 거 하기.  - 테이블 번호는 구현안해도 되지 않나?
-'''
