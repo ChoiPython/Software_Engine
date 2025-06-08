@@ -1,12 +1,13 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from getMenu import *
+from Menu_del_control import *
 
 class Menu_del:
     
     def __init__(self):
-        self.data = getMenu()
-        self.Menu_list = self.data.get()
+        self.data = getMenu()               
+        self.Menu_list = self.data.get()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
 
         self.menu_del_window = Tk()
         self.menu_del_window.title("사용자 메인화면")
@@ -30,8 +31,8 @@ class Menu_del:
         self.table_num = self.setlabel(self.head_frame, 'left', '메뉴 삭제 화면', 30, 1, anc = 'w')         # 테이블 번호 라벨
 
     def setMenu(self, category = '카테고리1'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
+        self.Menu_list = self.data.get()    # 메뉴 데이터 가져오기 (사실 로그인할 때 이루어져야 하지만 구현상 여기서 가져옴)
         menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
-        
         for i in range(len(menu)):
             row = i // 4    # 4개씩 출력
             col = i % 4 
@@ -45,7 +46,7 @@ class Menu_del:
             self.setlabel(frame, 'top', menu[i][1], 10, 1, anc='w', t_font=("맑은고딕", 13))           # 메뉴명 라벨 생성 
             self.setlabel(frame, 'top', menu[i][3],10, 1, anc='w', t_font=("맑은고딕", 13))         # 메뉴 가격 라벨 생성
             self.add_cart_bt = self.setButton(frame, 'right', '삭제', 10, 1, x=10, y=5)                # 삭제 버튼 생성
-            self.add_cart_bt.config(command = lambda m = menu[i][1] : self.menu_del_event(m))         
+            self.add_cart_bt.config(command = lambda m = menu[i][:2] : self.menu_del_event(m))         # 카테고리랑, 메뉴이름 넘기기
 
 
     def ShowWidget(self):
@@ -115,8 +116,11 @@ class Menu_del:
         pass
 
     # 메뉴 삭제 버튼 이벤트
-    def menu_del_event(self, menu): # 컨트롤 클래스로 구현하기
-        print(f"{menu} 메뉴 삭제") 
+    def menu_del_event(self, menu): # 컨트롤 클래스로 구현하기  - 데이터는 삭제됨 / UI에서는 아직 삭제 안됨.
+        delete = Menu_del_control()
+        delete.menu_del(menu[1])
+        print(f"{menu[1]} 메뉴 삭제")       # menu[1]: 메뉴이름
+        self.setMenu(category=menu[0])      # menu[0]: 카테고리
 
     # 닫기 버튼 이벤트
     def colose_event(self):     # 닫기 기능 정상 작동
