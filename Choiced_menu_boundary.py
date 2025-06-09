@@ -9,7 +9,8 @@ class Choiced_menu_boundary:
         self.ctrl = Choiced_Menu_control(user_main_instance)
         self.user_main = user_main_instance
         self.menu = menu
-        print(menu)
+        # choiced_menu: ('1.메인메뉴', '닭꼬지', 'test.jpg', 1300, None, 0) 메뉴 데이터 이런식
+        print(f"choiced_menu: {self.menu}")
         
         # 메인 윈도우 생성
         self.Choiced_menu_window = Toplevel()
@@ -38,11 +39,13 @@ class Choiced_menu_boundary:
             ]
         }
         
-        # self.menu = getMenu()
-        # self.menu_list = self.menu.getMenu()
+        self.getopt = getMenu()
+        self.opt_list = self.getopt.getOption(self.menu[1]) 
+        # (('닭꼬지', '매운맛', 0, 1), ('닭꼬지', '순한맛', 0, 1)) 이런식으로 데이터 가져 옴
+        print(f"self.opt_list{self.opt_list}")
+        
         # self.select_req_opt = []        # 필수옵션
-        self.select_add_opt = []        # 추가옵션
-        print()
+        self.select_add_opt = []        # 선택한 추가옵션
 
 
         # 상태 변수 초기화
@@ -255,6 +258,7 @@ class Choiced_menu_boundary:
         print("장바구니 담기 실행")
         self.cmc = Choiced_Menu_control(self.user_main)
         self.cmc.add_cart(self.menu_info)
+        self.Choiced_menu_window.destroy()
 
 # 프로그램 시작
 if __name__ == "__main__":

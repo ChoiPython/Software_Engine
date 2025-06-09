@@ -41,7 +41,7 @@ class getMenu:
     
 if __name__ == "__main__":
     getmenu = getMenu()
-    result = getmenu.getOption('피자')
+    result = getmenu.getOption('닭꼬지')
     cate = sorted(list((info for info in result if info[0] == '카테고리1')), key = lambda x: x[1])
     for i in result :
         print(i)
