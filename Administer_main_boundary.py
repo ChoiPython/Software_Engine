@@ -188,11 +188,16 @@ class Administer_main:
         # 캔버스 크기가 변경될 때도 on_frame_configure를 호출하여 scrollable_frame의 너비를 조정합니다.
         canvas.bind("<Configure>", on_frame_configure)
 
+        def on_mousewheel(event):
+            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+
         # 마우스 휠 스크롤 기능 추가 (전역 바인딩)
-        canvas.bind_all("<MouseWheel>", lambda event: canvas.yview_scroll(int(-1*(event.delta/120)), "units"))
+        canvas.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", on_mousewheel))
+        canvas.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
 
         # setMenu에서 사용할 수 있도록 scrollable_frame을 반환합니다.
         return scrollable_frame
+
 
 
 if __name__ == "__main__":
