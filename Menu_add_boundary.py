@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 from Option_add_boundary import OptionPopup  # 옵션창 코드 import
-from Menu_adj_control import Menu_adj_control
+from Menu_add_control import Menu_add_control  # 메뉴 등록 컨트롤러 import
 
 # 플레이스홀더 Entry 클래스
 class PlaceholderEntry(tk.Entry):
@@ -91,8 +91,8 @@ class MenuForm(tk.Tk):
         self.bt = tk.Button(self, text="취소", width=int(10*x_ratio), relief="solid", borderwidth=1, command=self.quit)
         self.bt.place(x=int(470*x_ratio), y=int(220*y_ratio))
 
-        # 컨트롤 클래스 인스턴스 생성
-        self.adj_control = Menu_adj_control()
+        # 메뉴 등록 컨트롤 클래스 인스턴스 생성
+        self.add_control = Menu_add_control()
 
     def select_photo(self):
         file_path = filedialog.askopenfilename(
@@ -116,7 +116,12 @@ class MenuForm(tk.Tk):
         description = self.desc_txt.get()
 
         # 데이터 유효성 검사 및 변환
-        new_data = {
+        # 가격이 숫자가 아니면 등록 불가
+        if price not in ["", "가격"] and not price.isdigit():
+            messagebox.showerror("입력 오류", "가격은 숫자만 입력하세요.")
+            return
+
+        menu_data = {
             'category': category if category != "카테고리 지정" else None,
             'menu': menu_name if menu_name not in ["", "메뉴명"] else None,
             'price': int(price) if price.isdigit() else None,
@@ -124,13 +129,15 @@ class MenuForm(tk.Tk):
             'image': self.image_path
         }
 
-        # 원본 메뉴명은 등록 전 메뉴명으로, 여기서는 새 메뉴명으로 임시 설정
-        original_name = menu_name
+        # 필수 입력값 체크 (예시: 메뉴명, 가격)
+        if not menu_data['menu'] or not menu_data['price']:
+            messagebox.showerror("입력 오류", "메뉴명과 가격을 모두 입력하세요.")
+            return
 
-        # 컨트롤 클래스의 메뉴 등록 메서드 호출
-        result = self.adj_control.menu_adj(original_name, new_data)
+        # 메뉴 등록 컨트롤러 호출
+        result = self.add_control.menu_add(menu_data)
 
-        # 결과 메시지 박스 출력
+        # 결과 메시지 출력
         messagebox.showinfo("등록 결과", result)
 
     def quit(self):
