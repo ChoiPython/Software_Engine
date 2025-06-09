@@ -7,7 +7,7 @@ class Menu_del_control:
 
     def menu_del(self, menu):
         
-        self.conn = pymysql.connect(host='127.0.0.1', user = 'soft@localhost', password='0000', db='Table_Order')
+        self.conn = pymysql.connect(host='localhost', user = 'soft', password='0000', db='Table_Order')
 
         self.cursor = self.conn.cursor()      # 데이터 조작할 커서 생성
 
