@@ -93,13 +93,14 @@ class CartItem(tk.Frame):
         self.parent_window.remove_item(self)
 
 
-class CartWindow(tk.Tk):
+class CartWindow(tk.Toplevel):
     """장바구니 메인 창 UI"""
 
-    def __init__(self):
+    def __init__(self, cart):
         super().__init__()
         self.title("장바구니")
         self.geometry("600x800+300+100")  # 창 크기 및 위치
+        self.original_cart_data = cart
         self.cart_items = []  # 장바구니 항목 목록
 
         # --- 상단 타이틀 영역 ---
@@ -156,10 +157,20 @@ class CartWindow(tk.Tk):
         tk.Button(inner_button_frame, text="주문하기", height=4, width=20, command=self.order_items).pack(side="left", padx=10)
 
         # --- 테스트용 샘플 메뉴 추가 ---
-        self.add_item("메뉴0", "추가 옵션", 10000, "test.jpg")
-        self.add_item("메뉴1", "추가 옵션", 9000, "test2.jpg")
-        self.add_item("메뉴2", "추가 옵션", 8000, "test.jpg")
-        self.add_item("메뉴3", "추가 옵션", 7000, "test2.jpg")
+        # self.add_item("메뉴0", "추가 옵션", 10000, "test.jpg")
+        # self.add_item("메뉴1", "추가 옵션", 9000, "test2.jpg")
+        # self.add_item("메뉴2", "추가 옵션", 8000, "test.jpg")
+        # self.add_item("메뉴3", "추가 옵션", 7000, "test2.jpg")
+        for i in self.original_cart_data:
+            # menu: 메뉴 이름
+            # menu_img: 메뉴 이미지
+            # self.selected_required_option_name 선택한 필수 옵션
+            # self.select_add_opt: 선택한 추가 옵션 리스트
+            # self.quantity: 총 수량
+            # self.total: 총 가격
+            print(i)
+            self.add_item(i[0], i[3], i[5], i[1])
+
 
     def _on_frame_configure(self, event):
         """items_frame 변경 시 scrollregion 갱신"""

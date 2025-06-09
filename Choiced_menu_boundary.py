@@ -1,11 +1,18 @@
 from tkinter import *
 from PIL import Image, ImageTk
+from getMenu import *
+from Choiced_Menu_control import *
 
-class Choiced_menu:
+class Choiced_menu_boundary:
 
-    def __init__(self):
+    def __init__(self, user_main_instance, menu):
+        self.ctrl = Choiced_Menu_control(user_main_instance)
+        self.user_main = user_main_instance
+        self.menu = menu
+        print(menu)
+        
         # 메인 윈도우 생성
-        self.Choiced_menu_window = Tk()
+        self.Choiced_menu_window = Toplevel()
         self.Choiced_menu_window.title("메뉴 선택 화면")
         self.Choiced_menu_window.geometry("600x800+300+100")
         self.Choiced_menu_window.resizable(True, True)
@@ -30,6 +37,13 @@ class Choiced_menu:
                 {"name": "추가 옵션 F", "price": 800},
             ]
         }
+        
+        # self.menu = getMenu()
+        # self.menu_list = self.menu.getMenu()
+        # self.select_req_opt = []        # 필수옵션
+        self.select_add_opt = []        # 추가옵션
+        print()
+
 
         # 상태 변수 초기화
         self.selected_required_option_name = None
@@ -44,7 +58,7 @@ class Choiced_menu:
         self.ShowUi()
 
         # 메인 이벤트 루프
-        self.Choiced_menu_window.mainloop()
+        # self.Choiced_menu_window.mainloop()
 
     def ShowUi(self):
         # 전체 레이아웃 구성
@@ -180,10 +194,15 @@ class Choiced_menu:
             # 선택 해제
             self.selected_additional_options.remove(name)
             btn.config(relief="raised", bg="SystemButtonFace")
+            self.select_add_opt.remove(name)     # 선택한 옵션 삭제
+            print(self.select_add_opt)
         else:
             # 선택 추가
             self.selected_additional_options.add(name)
             btn.config(relief="sunken", bg="#90EE90")
+            self.select_add_opt.append(name)     # 선택한 옵션 추가
+            print(self.select_add_opt)
+            
 
         self.update_total()
 
@@ -203,8 +222,8 @@ class Choiced_menu:
         )
 
         # 최종 합계 금액 표시
-        total = (base_price + required_price + additional_price) * self.quantity
-        self.total_label.config(text=f"합계금액 {total:,} 원")
+        self.total = (base_price + required_price + additional_price) * self.quantity
+        self.total_label.config(text=f"합계금액 {self.total:,} 원")
 
     def increase_quantity(self):
         # 수량 증가
@@ -223,8 +242,20 @@ class Choiced_menu:
         self.Choiced_menu_window.destroy()
 
     def add_to_cart(self):
+        # menu: 메뉴 이름
+        # menu_img: 메뉴 이미지
+        # self.selected_required_option_name 선택한 필수 옵션
+        # self.select_add_opt: 선택한 추가 옵션 리스트
+        # self.quantity: 총 수량
+        # self.total: 총 가격
+        menu = self.menu[1]
+        menu_img = self.menu[2]
+        self.menu_info = [menu, menu_img, self.selected_required_option_name, self.select_add_opt, self.quantity, self.total]
+        print(self.menu_info)
         print("장바구니 담기 실행")
+        self.cmc = Choiced_Menu_control(self.user_main)
+        self.cmc.add_cart(self.menu_info)
 
 # 프로그램 시작
 if __name__ == "__main__":
-    mainui = Choiced_menu()
+    mainui = Choiced_menu_boundary()
