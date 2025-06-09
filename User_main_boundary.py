@@ -2,13 +2,17 @@ from tkinter import *
 from PIL import Image, ImageTk
 from tkinter import messagebox
 from getMenu import *
+from Choiced_menu_boundary import *
+from Cart_boundary import *
 
 class User_main:
     
     def __init__(self):
         self.data = getMenu()
         self.Menu_list = self.data.getMenu()
+        self.cart = []
 
+    def run(self):
         self.user_window = Tk()
         self.user_window.title("사용자 메인화면")
         self.user_window.geometry("1200x800+300+100")
@@ -31,6 +35,7 @@ class User_main:
         self.table_num = self.setlabel(self.head_frame, 'left', '테이블 1', 10, 1, anc = 'w')         # 테이블 번호 라벨
 
     def setMenu(self, category = '1.메인메뉴'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
+        self.Menu_list = self.data.getMenu()
         menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
         
         for i in range(len(menu)):
@@ -124,6 +129,7 @@ class User_main:
         # menu: ('1.메인메뉴', '닭꼬지', 'test.jpg', 1300, None, 0)
         print(menu)
         print("장바구니에 담기")
+        self.cmb = Choiced_menu_boundary(self, menu)
 
     # 결제 요청 버튼 이벤트
     def req_pay_event(self):
@@ -135,6 +141,8 @@ class User_main:
     # 장바구니 버튼 이벤트
     def cart_event(self):
         print("장바구니가 열림")
+        print(self.cart)
+        self.cart_ui = CartWindow(self.cart)
 
     # 주문목록 버튼 이벤트
     def orderlistui_event(self):
@@ -197,14 +205,7 @@ class User_main:
 
 if __name__ == "__main__":
     mainui = User_main()
+    mainui.run()
+    
 
 
-
-
-'''
-1. 카테고리 버튼에 대한 변수가 필요없어진 상황
-2. DB에서 메뉴 정보를 불러오기   - 구현 o
-3. 결제 요청되었습니다. 메시지 출력하기 - 구현 o
-4. 장바구니, 주문목록 화면 출력하기 (지훈 님이랑 형우 님이 완료하면 import시켜서 열기만 하면 됨)
-5. 불러온 데이터로 메뉴 화면 띄우는거, 테이블 번호 레이블 바꾸는 거 하기.  - 테이블 번호는 구현안해도 되지 않나?
-'''
