@@ -138,7 +138,9 @@ class CartWindow(tk.Toplevel):
 
 
         # 마우스 휠 스크롤링 지원
-        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.canvas.bind("<Enter>", self._bind_mousewheel)
+        self.canvas.bind("<Leave>", self._unbind_mousewheel)
+        self.protocol("WM_DELETE_WINDOW", self.close_event)
 
         # --- 하단: 총금액 + 버튼 영역 ---
         self.bottom_frame = tk.Frame(self, height=100)
@@ -189,9 +191,18 @@ class CartWindow(tk.Toplevel):
         canvas_width = event.width
         self.canvas.itemconfig(self.canvas_window, width=canvas_width)    
 
+    # def _on_mousewheel(self, event):
+    #     """마우스 휠로 스크롤 가능하도록 처리"""
+    #     self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+    def _bind_mousewheel(self, event):
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+
+    def _unbind_mousewheel(self, event):
+        self.canvas.unbind_all("<MouseWheel>")
+
     def _on_mousewheel(self, event):
-        """마우스 휠로 스크롤 가능하도록 처리"""
         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
 
     def add_item(self, name, option, price, image_path=None):
         """장바구니 항목 추가"""
@@ -217,7 +228,9 @@ class CartWindow(tk.Toplevel):
         messagebox.showinfo("주문 완료", f"{total:,.0f}원이 주문되었습니다!")
         self.destroy()
 
-
+    def close_event(self):
+        self.canvas.unbind_all("<MouseWheel>")
+        self.destroy()
 if __name__ == "__main__":
     app = CartWindow()
     app.mainloop()
