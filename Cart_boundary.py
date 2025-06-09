@@ -30,10 +30,17 @@ class CartItem(tk.Frame):
         image_label.pack(side="left", padx=5)
 
         # 메뉴 이름과 옵션 표시
+        self.formatted_opt = option[0] + "\n"
+        for i in range(1, len(option), 2):
+            pair = option[i:i+2]
+            line = "\t".join(pair)  # 옵션들 사이 공백
+            self.formatted_opt += line + "\n"
+            print(f"{self.formatted_opt}")
+        self.formatted_opt = self.formatted_opt.strip()
         info_frame = tk.Frame(top_frame)
         info_frame.pack(side="left", fill="x", expand=True, padx=10)
         tk.Label(info_frame, text=name, font=("Arial", 16, "bold"), pady=5).pack(anchor="w")
-        tk.Label(info_frame, text=option, font=("Arial", 13), fg="#555555", pady=2).pack(anchor="w")
+        tk.Label(info_frame, text=self.formatted_opt, font=("Arial", 13), fg="#555555", pady=2, justify="left", anchor='w').pack(anchor="c")
 
         # 삭제 버튼
         delete_btn = tk.Button(
@@ -168,7 +175,8 @@ class CartWindow(tk.Toplevel):
             # self.select_add_opt: 선택한 추가 옵션 리스트
             # self.quantity: 총 수량
             # self.total: 총 가격
-            print(i)
+            print(f"print-i:{i}")
+            i[3].insert(0, i[2])
             self.add_item(i[0], i[3], i[5], i[1])
 
 
