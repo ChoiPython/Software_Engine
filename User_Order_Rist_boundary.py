@@ -23,6 +23,24 @@ def fetch_orders_by_table(table_number):
 def show_payment_popup():
     messagebox.showinfo("결제 완료", "결제 요청이 완료되었습니다.")
     root.destroy()
+
+
+# ----------------------
+# menu_list를 받아서 UI에 표시하는 함수
+# ----------------------
+def show_order_window_from_cart(menu_list):
+    """
+    menu_list: [
+        {"menu_name": ..., "option": ..., "quantity": ..., "price": ..., "image_path": ...},
+        ...
+    ]
+    """
+    root = tk.Toplevel()
+    root.title("주문 내역")
+    root.geometry("700x800")
+
+    total_price = 0
+
 # 루트 창
 root = tk.Tk()
 root.title("주문 내역")
@@ -142,5 +160,13 @@ def _on_mousewheel(event):
 
 canvas.bind_all("<MouseWheel>", _on_mousewheel)
 
-# 실행
-root.mainloop()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    root.title("주문 내역")
+    root.geometry("700x800")
+    
+    orders = fetch_orders_by_table(1)  # DB에서 테스트용 불러오기
+    total_price = 0
+    ...
+    root.mainloop()
