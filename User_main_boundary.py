@@ -131,6 +131,7 @@ class User_main:
         # print("장바구니에 담기")
         self.cmb = Choiced_menu_boundary(self, menu)
 
+
     # 결제 요청 버튼 이벤트
     def req_pay_event(self):
         messagebox.showinfo("결제요청", "결제가 요청되었습니다.")   # 몇초 후 사라지게 구현??
@@ -143,9 +144,15 @@ class User_main:
         # print("장바구니가 열림")
         # print(self.cart)
         self.cart_ui = CartWindow(self.cart)
+        print(self.cart)
+        self.cart_ui = CartWindow(self.cart)
+        
+        self.cart_ui.grab_set()
+
 
     # 주문목록 버튼 이벤트
     def orderlistui_event(self):
+        # self.cart(장바구니에 들어 있는 모든 정보 변수)
         print("주문목록 화면이 열림")    
 
 
