@@ -17,13 +17,8 @@ class Menu_add_control:
             }
         """
         try:
-            conn = pymysql.connect(
-                host='127.0.0.1',
-                user='soft@localhost',
-                password='0000',
-                db='Table_Order'
-            )
-            cursor = conn.cursor()
+            self.conn = pymysql.connect(host='localhost', user = 'soft', password='0000', db='Table_Order')
+            self.cursor = self.conn.cursor()
 
             # 컬럼명과 값 분리
             columns = []
@@ -40,18 +35,18 @@ class Menu_add_control:
 
             # INSERT 쿼리 생성
             insert_query = f"INSERT INTO menu ({', '.join(columns)}) VALUES ({', '.join(placeholders)})"
-            cursor.execute(insert_query, tuple(values))
-            conn.commit()
+            self.cursor.execute(insert_query, tuple(values))
+            self.conn.commit()
             return "등록 성공"
         except Exception as e:
-            if conn:
-                conn.rollback()
+            if self.conn:
+                self.conn.rollback()
             return f"오류 발생: {str(e)}"
         finally:
-            if cursor:
-                cursor.close()
-            if conn:
-                conn.close()
+            if self.cursor:
+                self.cursor.close()
+            if self.conn:
+                self.conn.close()
 
 # 사용 예시
 if __name__ == "__main__":

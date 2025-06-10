@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 from getMenu import *
 from Menu_adj_main_boundary import *
 from Menu_del_boundary import *
+from Menu_add_boundary import *
 
 class Administer_main:
     
@@ -10,6 +11,10 @@ class Administer_main:
         self.data = getMenu()
         self.Menu_list = self.data.getMenu()
 
+        self.Show_Administer_main()
+
+
+    def Show_Administer_main(self):
         self.admin_main_window = Tk()
         self.admin_main_window.title("관리자 메인화면")
         self.admin_main_window.geometry("1200x800+300+100")
@@ -19,7 +24,6 @@ class Administer_main:
         self.ShowWidget()   # 위젯 출력
         self.setMenu()      # 메뉴 출력
         self.admin_main_window.mainloop()
-
 
     # 프레임 세팅
     def ShowUi(self):
@@ -32,6 +36,7 @@ class Administer_main:
         self.table_num = self.setlabel(self.head_frame, 'left', '관리자 메인 화면', 30, 1, anc = 'w')         # 테이블 번호 라벨
 
     def setMenu(self, category = '1.메인메뉴'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
+        self.Menu_list = self.data.getMenu()
         menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
         
         for i in range(len(menu)):
@@ -127,7 +132,9 @@ class Administer_main:
     # 메뉴 등록 버튼 이벤트
     def menu_addui_event(self):
         print("메뉴 등록 버튼을 눌렀습니다.")
-        pass
+        menu_addui = MenuForm(self.Menu_list)
+
+        
     
     # 메뉴 수정 버튼 이벤트
     def menu_adjui_event(self):
@@ -139,7 +146,7 @@ class Administer_main:
     def menu_delui_event(self):
         print("메뉴 삭제 버튼을 눌렀습니다.")    
         menu_delui = Menu_del()
-        menu_delui.menu_del_window.grab_set()   # 관리자 메인 화면 비활성화
+
 
         
 
