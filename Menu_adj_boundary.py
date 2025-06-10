@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 from Option_add_boundary import OptionPopup  # 옵션창 코드 import
-from Menu_adj_control import Menu_adj_control
+from Menu_adj_control import *
 
 # 플레이스홀더 Entry 클래스
 class PlaceholderEntry(tk.Entry):
@@ -27,13 +27,23 @@ class PlaceholderEntry(tk.Entry):
             self.insert(0, self.placeholder)
             self['fg'] = self.placeholder_color
 
-class MenuForm(tk.Tk):
-    def __init__(self):
+class MenuForm(tk.Toplevel):
+    def __init__(self, menu_list, menu):
         super().__init__()
-        self.title("메뉴 수정")
+        self.title("메뉴 등록")
         self.geometry("750x450")
         self.resizable(False, False)
         self.configure(bg="#ffffff")
+        self.grab_set()
+
+
+        # print("menu_list:", menu_list)
+        self.menu_name = list((menu_name[1] for menu_name in menu_list))    # 등록되어 있는 메뉴들
+        self.cate_name = sorted(list(set(cate[0] for cate in menu_list)))   # 등록되어 있는 카테고리들
+        self.menu = [val for val in menu]    
+        if self.menu[4] == None:
+            self.menu[4] = "메뉴설명"
+        # ('1.메인메뉴', '돈까스', '기본이미지.jpg', 10000, '바삭한 돼지고기 돈까스', 0)
 
         # 비율 계산
         x_ratio = 750 / 600
@@ -46,22 +56,22 @@ class MenuForm(tk.Tk):
         self.photo_label = tk.Label(self.photo_frame, text="메뉴 사진", bg="white")
         self.photo_label.pack(fill="both", expand=True)
         self.photo = None
-        self.image_path = None  # 이미지 경로 저장 변수
+        self.image_path = "기본이미지.jpg"  # 이미지 경로 저장 변수
 
         # 카테고리 드롭다운
-        self.category_var = tk.StringVar(value="카테고리 지정")
-        self.category_menu = tk.OptionMenu(self, self.category_var, "카테고리 지정", "한식", "중식", "일식", "양식")
+        self.category_var = tk.StringVar(value=self.menu[0])
+        self.category_menu = tk.OptionMenu(self, self.category_var, "카테고리 지정", *self.cate_name)
         self.category_menu.config(width=int(23*x_ratio), relief="solid", borderwidth=1, anchor='w')
         self.category_menu.place(x=int(190*x_ratio), y=int(20*y_ratio))
 
         # 플레이스홀더 Entry 사용
-        self.menu_text = PlaceholderEntry(self, placeholder="메뉴명", width=int(25*x_ratio), relief="solid", borderwidth=1)
+        self.menu_text = PlaceholderEntry(self, placeholder=self.menu[1], width=int(25*x_ratio), relief="solid", borderwidth=1)
         self.menu_text.place(x=int(190*x_ratio), y=int(60*y_ratio))
 
-        self.price_txt = PlaceholderEntry(self, placeholder="가격", width=int(25*x_ratio), relief="solid", borderwidth=1)
+        self.price_txt = PlaceholderEntry(self, placeholder=self.menu[3], width=int(25*x_ratio), relief="solid", borderwidth=1)
         self.price_txt.place(x=int(190*x_ratio), y=int(100*y_ratio))
 
-        self.desc_txt = PlaceholderEntry(self, placeholder="메뉴 설명", width=int(25*x_ratio), relief="solid", borderwidth=1)
+        self.desc_txt = PlaceholderEntry(self, placeholder=self.menu[4], width=int(25*x_ratio), relief="solid", borderwidth=1)
         self.desc_txt.place(x=int(190*x_ratio), y=int(140*y_ratio))
 
         # 사진 선택 버튼
@@ -85,13 +95,13 @@ class MenuForm(tk.Tk):
                               command=self.open_add_option, cursor="hand2")
         self.plus2.pack(side="left")
 
-        # 수정/취소 버튼
-        self.menu_add_bt = tk.Button(self, text="수정", width=int(10*x_ratio), relief="solid", borderwidth=1, command=self.submit)
+        # 등록/취소 버튼
+        self.menu_add_bt = tk.Button(self, text="등록", width=int(10*x_ratio), relief="solid", borderwidth=1, command=self.submit)
         self.menu_add_bt.place(x=int(370*x_ratio), y=int(220*y_ratio))
         self.bt = tk.Button(self, text="취소", width=int(10*x_ratio), relief="solid", borderwidth=1, command=self.quit)
         self.bt.place(x=int(470*x_ratio), y=int(220*y_ratio))
 
-        # 컨트롤 클래스 인스턴스 생성
+        # 메뉴 등록 컨트롤 클래스 인스턴스 생성
         self.adj_control = Menu_adj_control()
 
     def select_photo(self):
@@ -116,7 +126,12 @@ class MenuForm(tk.Tk):
         description = self.desc_txt.get()
 
         # 데이터 유효성 검사 및 변환
-        new_data = {
+        # 가격이 숫자가 아니면 등록 불가
+        if price not in ["", "가격"] and not price.isdigit():
+            messagebox.showerror("입력 오류", "가격은 숫자만 입력하세요.")
+            return
+
+        menu_data = {
             'category': category if category != "카테고리 지정" else None,
             'menu': menu_name if menu_name not in ["", "메뉴명"] else None,
             'price': int(price) if price.isdigit() else None,
@@ -124,17 +139,26 @@ class MenuForm(tk.Tk):
             'image': self.image_path
         }
 
-        # 원본 메뉴명은 수정 전 메뉴명으로, 여기서는 새 메뉴명으로 임시 설정
-        original_name = menu_name
+        # 필수 입력값 체크 (예시: 메뉴명, 가격, 카테고리)
+        if menu_data['menu'] == None or menu_data['price'] == None or menu_data['category'] == None: 
+            messagebox.showerror("입력 오류", "메뉴명, 가격, 카테고리를 모두 입력하세요.")
+            return
+        
 
-        # 컨트롤 클래스의 메뉴 수정 메서드 호출
-        result = self.adj_control.menu_adj(original_name, new_data)
 
-        # 결과 메시지 박스 출력
-        messagebox.showinfo("수정 결과", result)
+        # 메뉴 등록 컨트롤러 호출
+        print(menu_data)
+        result = self.adj_control.menu_adj(menu_data, self.menu[1])
+
+        # 결과 메시지 출력
+        res = messagebox.showinfo("등록 결과", result)
+        self.destroy()
+        
+
+
 
     def quit(self):
-        messagebox.showinfo("취소", "메뉴수정이 취소되었습니다.")
+        self.destroy()
 
     def open_must_option(self):
         OptionPopup(self, title="필수옵션 등록")

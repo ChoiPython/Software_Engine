@@ -1,52 +1,55 @@
-import pymysql
 
+# 데이터 연동
+import pymysql
 class Menu_adj_control:
     def __init__(self):
-        self.conn = None
-        self.cursor = None
+        pass
 
-    def menu_adj(self, original_name, new_data):
-        """메뉴 정보 업데이트 메서드
-        Args:
-            original_name (str): 수정 대상 메뉴명
-            new_data (dict): {'category':값, 'menu':값, 'image':값, 'price':값, 'description':값}
+    def menu_adj(self, new_menu, bf_menu):
+        
         """
-        try:
-            # 1. DB 연결 설정
-            self.conn = pymysql.connect(
-                host='127.0.0.1',
-                user='soft@localhost',
-                password='0000',
-                db='Table_Order'
-            )
-            self.cursor = self.conn.cursor()
+        메뉴 등록 메서드
+        Args:
+            menu_data (dict): {
+                {'category': '한식', 
+                'menu': '돈까스', 
+                'price': 10000, 'description': 
+                '바삭한 돼지고기 돈까스', 
+                'image': 'C:/Users/wndud/Desktop/25-1학기/소프트웨어공학/5. 구현/기본이미지.jpg'}
+            }"""
+        
+        self.conn = pymysql.connect(host='localhost', user = 'soft', password='0000', db='Table_Order')
+        self.cursor = self.conn.cursor()      # 데이터 조작할 커서 생성
+        # ['한식', '돈까스', 10000, '바삭한 돼지고기 돈까스', 'C:/Users/wndud/Desktop/25-1학기/소프트웨어공학/5. 구현/기본이미지.jpg']
+        self.menu_data = [val for k, val in new_menu.items() ]
+        self.menu_data[4] = self.menu_data[4].split("/")[-1]    # 경로빼고 이미지 이름만
+        print(self.menu_data)
+        print(bf_menu)
+        # # 데이터 - 삽입, 수정, 삭제에 사용됨
+        self.update_query = f"update menu set category = '{self.menu_data[0]}', menu ='{self.menu_data[1]}', image='{self.menu_data[4]}', price={self.menu_data[2]}, menu_desc = '{self.menu_data[3]}', soldout='0' where menu = '{bf_menu}'"    # 전체 데이터 가져오는 쿼리문
+        self.cursor.execute(self.update_query)   # 쿼리 입력
 
-            # 2. 동적 쿼리 생성 로직
-            set_clauses = []
-            params = []
-            for key, value in new_data.items():
-                if value is not None:
-                    set_clauses.append(f"{key}=%s")
-                    params.append(value)
-            
-            if not set_clauses:
-                return "수정할 데이터가 없습니다"
+        self.conn.commit()       # 입력한 데이터 저장하기(데이터 삽입, 수정, 삭제에 사용됨.)
 
-            # 3. 안전한 파라미터 바인딩
-            query = f"UPDATE menu SET {', '.join(set_clauses)} WHERE menu=%s"
-            params.append(original_name)
-            
-            self.cursor.execute(query, tuple(params))
-            self.conn.commit()
-            return "수정 성공"
+        self.cursor.close()
+        self.conn.close()
+        return "메뉴 등록 완료"
 
-        except Exception as e:
-            if self.conn:
-                self.conn.rollback()
-            return f"오류 발생: {str(e)}"
-        finally:
-            # 4. 자원 해제
-            if self.cursor:
-                self.cursor.close()
-            if self.conn:
-                self.conn.close()
+
+
+if __name__ == "__main__":
+    delete_menu = Menu_adj_control()
+    menu = {'category': '1.메인메뉴', 
+            'menu': '오뎅탕', 
+            'price': 10000,
+            'description': '얼큰한 오뎅탕', 
+            'image': '기본이미지.jpg'}
+
+    delete_menu.menu_add(menu)
+    # cate = sorted(list((info for info in result if info[0] == '카테고리1')), key = lambda x: x[1])
+    # for i in cate :
+    #     print(i)
+
+
+
+

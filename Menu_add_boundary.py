@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 from Option_add_boundary import OptionPopup  # 옵션창 코드 import
-from Menu_add_control_choi import *  # 메뉴 등록 컨트롤러 import
+from Menu_add_control import *  # 메뉴 등록 컨트롤러 import
 from Administer_main_boundary import *
 
 # 플레이스홀더 Entry 클래스
