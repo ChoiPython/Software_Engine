@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
-from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용
+from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용dyddsdsds
 from User_main_boundary import *
+from User_Order_Rist_boundary import show_order_window_from_cart #주문목록 함수 임포트
 
 class CartItem(tk.Frame):
     """장바구니에 들어가는 개별 메뉴 항목 UI"""
@@ -32,6 +33,16 @@ class CartItem(tk.Frame):
         image_label.pack(side="left", padx=5)
 
         # 메뉴 이름과 옵션 표시
+        self.formatted_opt = req_option + "\n"
+        for i in range(0, len(add_option), 2):
+            pair = add_option[i:i+2]
+            line = "\t".join(pair)  # 옵션들 사이 공백
+            self.formatted_opt += line + "\n"
+            # print(f"{self.formatted_opt}")
+        self.formatted_opt = self.formatted_opt.strip()
+        info_frame = tk.Frame(top_frame)
+        info_frame.pack(side="left", fill="x", expand=True, padx=10)
+        tk.Label(info_frame, text=name, font=("Arial", 16, "bold"), pady=5).pack(anchor="w")
         if req_option == None :
             self.formatted_opt=""
             for i in range(0, len(add_option), 2):
@@ -95,6 +106,7 @@ class CartItem(tk.Frame):
     def update_price(self):
         """가격 및 수량 라벨 갱신 + 상위 창 총액 갱신"""
         self.count_label.config(text=str(self.count))
+        self.item_price_label.config(text=f"{self.get_total():,}")
         # self.item_price_label.config(text=f"{self.get_total():,}")
         self.parent_window.update_total()
 
@@ -136,6 +148,7 @@ class CartWindow(tk.Toplevel):
         self.head_frame.pack(fill="x")
         tk.Label(self.head_frame, text="장바구니", font=("Arial", 20, "bold")).pack(pady=20)
 
+        # --- 스크롤 가능한 항목 리스트 영역 ---
        # --- 스크롤 가능한 항목 리스트 영역 ---
         self.body_frame = tk.Frame(self)
         self.body_frame.pack(fill="both", expand=True)
@@ -247,6 +260,31 @@ class CartWindow(tk.Toplevel):
         self.total_label.config(text=f"{total:,.0f}")
 
     def order_items(self):
+    # 장바구니에서 데이터 수집
+        cart_data = []
+        for item in self.cart_items:
+            cart_data.append({
+                'menu_name': item.name,
+                'option': item.formatted_opt,
+                'quantity': item.count,
+                'price': item.get_total(),
+                'image_path': item.image_path
+        })
+
+    # 주문 완료 알림
+        total = sum(item.get_total() for item in self.cart_items)
+        messagebox.showinfo("주문 완료", f"{total:,.0f}원이 주문되었습니다!")
+
+    # 주문 내역 창 호출
+        show_order_window_from_cart(cart_data)
+
+    # 장바구니 닫기
+        self.destroy()
+    
+    def close_event(self):
+        self.canvas.unbind_all("<MouseWheel>")
+        self.destroy()
+
         """주문 완료 메시지 및 창 종료"""
         total = sum(item.get_total() for item in self.cart_items)
         if len(self.original_cart_data) == 0:

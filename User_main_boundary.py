@@ -142,6 +142,8 @@ class User_main:
     # 장바구니 버튼 이벤트
     def cart_event(self):
         # print("장바구니가 열림")
+        # print(self.cart)
+        self.cart_ui = CartWindow(self.cart)
         print(self.cart)
         self.cart_ui = CartWindow(self.cart)
         
