@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용
 from User_main_boundary import *
+from User_Order_Rist_boundary import show_order_window_from_cart
 
 class CartItem(tk.Frame):
     """장바구니에 들어가는 개별 메뉴 항목 UI"""
@@ -123,7 +124,7 @@ class CartWindow(tk.Toplevel):
         self.head_frame.pack(fill="x")
         tk.Label(self.head_frame, text="장바구니", font=("Arial", 20, "bold")).pack(pady=20)
 
-       # --- 스크롤 가능한 항목 리스트 영역 ---
+        # --- 스크롤 가능한 항목 리스트 영역 ---
         self.body_frame = tk.Frame(self)
         self.body_frame.pack(fill="both", expand=True)
 
@@ -234,14 +235,31 @@ class CartWindow(tk.Toplevel):
         self.total_label.config(text=f"{total:,.0f}")
 
     def order_items(self):
-        """주문 완료 메시지 및 창 종료"""
+    # 장바구니에서 데이터 수집
+        cart_data = []
+        for item in self.cart_items:
+            cart_data.append({
+                'menu_name': item.name,
+                'option': item.formatted_opt,
+                'quantity': item.count,
+                'price': item.get_total(),
+                'image_path': item.image_path
+        })
+
+    # 주문 완료 알림
         total = sum(item.get_total() for item in self.cart_items)
         messagebox.showinfo("주문 완료", f"{total:,.0f}원이 주문되었습니다!")
-        self.destroy()
 
+    # 주문 내역 창 호출
+        show_order_window_from_cart(cart_data)
+
+    # 장바구니 닫기
+        self.destroy()
+    
     def close_event(self):
         self.canvas.unbind_all("<MouseWheel>")
         self.destroy()
+
 if __name__ == "__main__":
     app = CartWindow()
     app.mainloop()
