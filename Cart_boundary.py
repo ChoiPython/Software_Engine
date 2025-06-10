@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용
+from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용dyddsdsds
 from User_main_boundary import *
 from User_Order_Rist_boundary import show_order_window_from_cart
 
