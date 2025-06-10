@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 from Option_add_boundary import OptionPopup  # 옵션창 코드 import
-from Menu_add_control import Menu_add_control  # 메뉴 등록 컨트롤러 import
+from Menu_add_control_choi import *  # 메뉴 등록 컨트롤러 import
+from Administer_main_boundary import *
 
 # 플레이스홀더 Entry 클래스
 class PlaceholderEntry(tk.Entry):
@@ -27,13 +28,19 @@ class PlaceholderEntry(tk.Entry):
             self.insert(0, self.placeholder)
             self['fg'] = self.placeholder_color
 
-class MenuForm(tk.Tk):
-    def __init__(self):
+class MenuForm(tk.Toplevel):
+    def __init__(self, menu_list):
         super().__init__()
         self.title("메뉴 등록")
         self.geometry("750x450")
         self.resizable(False, False)
         self.configure(bg="#ffffff")
+        self.grab_set()
+
+        self.menu_name = list((menu_name[1] for menu_name in menu_list))    # 등록되어 있는 메뉴들
+        self.cate_name = sorted(list(set(cate[0] for cate in menu_list)))   # 등록되어 있는 카테고리들
+        print(self.cate_name)
+        # print(self.menu)
 
         # 비율 계산
         x_ratio = 750 / 600
@@ -46,11 +53,11 @@ class MenuForm(tk.Tk):
         self.photo_label = tk.Label(self.photo_frame, text="메뉴 사진", bg="white")
         self.photo_label.pack(fill="both", expand=True)
         self.photo = None
-        self.image_path = None  # 이미지 경로 저장 변수
+        self.image_path = "기본이미지.jpg"  # 이미지 경로 저장 변수
 
         # 카테고리 드롭다운
         self.category_var = tk.StringVar(value="카테고리 지정")
-        self.category_menu = tk.OptionMenu(self, self.category_var, "카테고리 지정", "한식", "중식", "일식", "양식")
+        self.category_menu = tk.OptionMenu(self, self.category_var, "카테고리 지정", *self.cate_name)
         self.category_menu.config(width=int(23*x_ratio), relief="solid", borderwidth=1, anchor='w')
         self.category_menu.place(x=int(190*x_ratio), y=int(20*y_ratio))
 
@@ -129,19 +136,28 @@ class MenuForm(tk.Tk):
             'image': self.image_path
         }
 
-        # 필수 입력값 체크 (예시: 메뉴명, 가격)
-        if not menu_data['menu'] or not menu_data['price']:
-            messagebox.showerror("입력 오류", "메뉴명과 가격을 모두 입력하세요.")
+        # 필수 입력값 체크 (예시: 메뉴명, 가격, 카테고리)
+        if menu_data['menu'] == None or menu_data['price'] == None or menu_data['category'] == None: 
+            messagebox.showerror("입력 오류", "메뉴명, 가격, 카테고리를 모두 입력하세요.")
+            return
+        
+        # 등록되어 있는 메뉴 알림
+        if menu_name in self.menu_name:
+            messagebox.showerror("등록 오류", "이미 등록되어 있는 메뉴 입니다.")
             return
 
         # 메뉴 등록 컨트롤러 호출
+        print(menu_data)
         result = self.add_control.menu_add(menu_data)
 
         # 결과 메시지 출력
-        messagebox.showinfo("등록 결과", result)
+        res = messagebox.showinfo("등록 결과", result)
+        self.destroy()
+
+
 
     def quit(self):
-        messagebox.showinfo("취소", "메뉴등록이 취소되었습니다.")
+        self.destroy()
 
     def open_must_option(self):
         OptionPopup(self, title="필수옵션 등록")
