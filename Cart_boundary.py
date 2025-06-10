@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용dyddsdsds
 from User_main_boundary import *
-from User_Order_Rist_boundary import show_order_window_from_cart
+from User_Order_Rist_boundary import show_order_window_from_cart #주문목록 함수 임포트
 
 class CartItem(tk.Frame):
     """장바구니에 들어가는 개별 메뉴 항목 UI"""
