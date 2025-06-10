@@ -1,16 +1,18 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용
+from User_main_boundary import *
 
 class CartItem(tk.Frame):
     """장바구니에 들어가는 개별 메뉴 항목 UI"""
 
-    def __init__(self, master, name, option, price, parent_window, image_path=None):
+    def __init__(self, cart, master, name, req_option, add_option, quantity, price, parent_window, image_path=None):
         super().__init__(master, bd=1, relief="solid", padx=5, pady=5)
         self.parent_window = parent_window  # 상위 CartWindow 참조
         self.price = price                  # 항목 가격
-        self.count = 1                      # 초기 수량
+        self.count = quantity                      # 초기 수량
         self.image_path = image_path        # 이미지 파일 경로
+
 
         # --- 상단 영역: 이미지, 메뉴명/옵션, 삭제 버튼 ---
         top_frame = tk.Frame(self)
@@ -30,12 +32,12 @@ class CartItem(tk.Frame):
         image_label.pack(side="left", padx=5)
 
         # 메뉴 이름과 옵션 표시
-        self.formatted_opt = option[0] + "\n"
-        for i in range(1, len(option), 2):
-            pair = option[i:i+2]
+        self.formatted_opt = req_option + "\n"
+        for i in range(0, len(add_option), 2):
+            pair = add_option[i:i+2]
             line = "\t".join(pair)  # 옵션들 사이 공백
             self.formatted_opt += line + "\n"
-            print(f"{self.formatted_opt}")
+            # print(f"{self.formatted_opt}")
         self.formatted_opt = self.formatted_opt.strip()
         info_frame = tk.Frame(top_frame)
         info_frame.pack(side="left", fill="x", expand=True, padx=10)
@@ -73,6 +75,10 @@ class CartItem(tk.Frame):
         )       
         self.item_price_label.pack(side="right", padx=10)
 
+        self.user_cart = cart
+        # print("test:", self.user_cart)
+
+
     def get_total(self):
         """현재 수량 기준 항목 총 가격 반환"""
         return self.price * self.count
@@ -86,18 +92,20 @@ class CartItem(tk.Frame):
     def increase_count(self):
         """수량 1 증가"""
         self.count += 1
+        self.user_cart[4] += 1
         self.update_price()
 
     def decrease_count(self):
         """수량 1 감소 (최소 1)"""
         if self.count > 1:
             self.count -= 1
+            self.user_cart[4] -= 1
             self.update_price()
 
     def delete_item(self):
         """자기 프레임 제거 및 장바구니에서 삭제"""
         self.destroy()
-        self.parent_window.remove_item(self)
+        self.parent_window.remove_item(self, self.user_cart)
 
 
 class CartWindow(tk.Toplevel):
@@ -169,7 +177,8 @@ class CartWindow(tk.Toplevel):
         # self.add_item("메뉴0", "추가 옵션", 10000, "test.jpg")
         # self.add_item("메뉴1", "추가 옵션", 9000, "test2.jpg")
         # self.add_item("메뉴2", "추가 옵션", 8000, "test.jpg")
-        # self.add_item("메뉴3", "추가 옵션", 7000, "test2.jpg")
+        # self.add_item("메뉴3", "추가 옵션", quantity,7000, "test2.jpg")
+        idx= 0
         for i in self.original_cart_data:
             # menu: 메뉴 이름
             # menu_img: 메뉴 이미지
@@ -177,9 +186,9 @@ class CartWindow(tk.Toplevel):
             # self.select_add_opt: 선택한 추가 옵션 리스트
             # self.quantity: 총 수량
             # self.total: 총 가격
-            print(f"print-i:{i}")
-            i[3].insert(0, i[2])
-            self.add_item(i[0], i[3], i[5], i[1])
+            # print(f"print-i:{i}")
+            self.add_item(cart[idx], i[0], i[2], i[3], i[4], i[5], i[1])
+            idx += 1
 
 
     def _on_frame_configure(self, event):
@@ -204,17 +213,19 @@ class CartWindow(tk.Toplevel):
         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
 
-    def add_item(self, name, option, price, image_path=None):
+    def add_item(self, cart, name, req_option, add_option, quantity, price, image_path=None):
         """장바구니 항목 추가"""
-        item = CartItem(self.items_frame, name, option, price, self, image_path)
+        item = CartItem(cart, self.items_frame, name, req_option, add_option, quantity, price, self, image_path)
         self.cart_items.append(item)
         item.pack(fill="x", pady=5, padx=10)
         self.update_total()
 
-    def remove_item(self, item):
+    def remove_item(self, item, del_cart):
         """항목 삭제 후 총합 갱신"""
         if item in self.cart_items:
             self.cart_items.remove(item)
+            self.original_cart_data.remove(del_cart)
+            # self.original_cart_data.remove(item)
             self.update_total()
 
     def update_total(self):
