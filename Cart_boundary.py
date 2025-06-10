@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용dyddsdsds
 from User_main_boundary import *
-from User_Order_Rist_boundary import show_order_window_from_cart #주문목록 함수 임포트
+
 
 class CartItem(tk.Frame):
     """장바구니에 들어가는 개별 메뉴 항목 UI"""
@@ -149,7 +149,7 @@ class CartWindow(tk.Toplevel):
         tk.Label(self.head_frame, text="장바구니", font=("Arial", 20, "bold")).pack(pady=20)
 
         # --- 스크롤 가능한 항목 리스트 영역 ---
-       # --- 스크롤 가능한 항목 리스트 영역 ---
+        # --- 스크롤 가능한 항목 리스트 영역 ---
         self.body_frame = tk.Frame(self)
         self.body_frame.pack(fill="both", expand=True)
 
@@ -275,6 +275,8 @@ class CartWindow(tk.Toplevel):
         total = sum(item.get_total() for item in self.cart_items)
         messagebox.showinfo("주문 완료", f"{total:,.0f}원이 주문되었습니다!")
 
+
+    
     # 주문 내역 창 호출
         show_order_window_from_cart(cart_data)
 
@@ -297,6 +299,15 @@ class CartWindow(tk.Toplevel):
     def close_event(self):
         self.canvas.unbind_all("<MouseWheel>")
         self.destroy()
+        
+# ✅ CartWindow.py 또는 cart_boundary.py 맨 위에 샘플 cart를 전역 변수로 선언
+sample_cart = [
+    ["초밥 세트", "images/sushi.jpg", "와사비 있음", ["연어", "참치"], 2, 18000],
+    ["우동", "images/udon.jpg", "매운맛", ["고기추가", "계란추가"], 1, 9000],
+    ["우동", "images/udon.jpg", "매운맛", ["고기추가", "계란추가"], 1, 9000]
+]
+
+# 아래에 if __name__ == "__main__": 안에서는 이걸 다시 불러다 씀
 if __name__ == "__main__":
-    app = CartWindow()
+    app = CartWindow(sample_cart)
     app.mainloop()

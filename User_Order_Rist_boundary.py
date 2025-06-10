@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-
+from Cart_boundary import sample_cart
 
 def show_order_window_from_cart(menu_list):
     root = tk.Toplevel()
@@ -120,28 +120,21 @@ def show_order_window_from_cart(menu_list):
         canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
     canvas.bind_all("<MouseWheel>", _on_mousewheel)
-    
+
 if __name__ == "__main__":
+    # CartWindow에서 가져온 샘플 cart를 주문 목록에 맞는 dict 형태로 변환
+    converted_cart = []
+    for item in sample_cart:
+        converted_cart.append({
+            'menu_name': item[0],
+            'image_path': item[1],
+            'option': item[2] + "\n" + "\t".join(item[3]),
+            'quantity': item[4],
+            'price': item[5]
+        })
+
+    # 주문 내역 창 띄우기
     root = tk.Tk()
-    root.withdraw()  # 메인 윈도우 숨기기 (빈 창 안 뜨게 함)
-
-    sample_menu = [
-        {
-            "menu_name": "돈까스",
-            "option": "치즈 추가",
-            "quantity": 2,
-            "price": 12000,
-            "image_path": "test.jpg"
-        },
-        {
-            "menu_name": "우동",
-            "option": "계란 추가",
-            "quantity": 1,
-            "price": 9000,
-            "image_path": "test2.jpg"
-        }
-    ]
-
-    show_order_window_from_cart(sample_menu)
-
+    root.withdraw()
+    show_order_window_from_cart(converted_cart)
     root.mainloop()
