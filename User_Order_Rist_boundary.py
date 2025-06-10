@@ -120,28 +120,3 @@ def show_order_window_from_cart(menu_list):
         canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
     canvas.bind_all("<MouseWheel>", _on_mousewheel)
-    
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.withdraw()  # 메인 윈도우 숨기기 (빈 창 안 뜨게 함)
-
-    sample_menu = [
-        {
-            "menu_name": "돈까스",
-            "option": "치즈 추가",
-            "quantity": 2,
-            "price": 12000,
-            "image_path": "test.jpg"
-        },
-        {
-            "menu_name": "우동",
-            "option": "계란 추가",
-            "quantity": 1,
-            "price": 9000,
-            "image_path": "test2.jpg"
-        }
-    ]
-
-    show_order_window_from_cart(sample_menu)
-
-    root.mainloop()

@@ -275,6 +275,8 @@ class CartWindow(tk.Toplevel):
         total = sum(item.get_total() for item in self.cart_items)
         messagebox.showinfo("주문 완료", f"{total:,.0f}원이 주문되었습니다!")
 
+
+    
     # 주문 내역 창 호출
         show_order_window_from_cart(cart_data)
 
