@@ -127,8 +127,8 @@ class User_main:
     # 담기 버튼 이벤트
     def add_cart_event(self, menu):
         # menu: ('1.메인메뉴', '닭꼬지', 'test.jpg', 1300, None, 0)
-        print(menu)
-        print("장바구니에 담기")
+        # print(menu)
+        # print("장바구니에 담기")
         self.cmb = Choiced_menu_boundary(self, menu)
 
     # 결제 요청 버튼 이벤트
@@ -140,8 +140,8 @@ class User_main:
     
     # 장바구니 버튼 이벤트
     def cart_event(self):
-        print("장바구니가 열림")
-        print(self.cart)
+        # print("장바구니가 열림")
+        # print(self.cart)
         self.cart_ui = CartWindow(self.cart)
 
     # 주문목록 버튼 이벤트

@@ -254,8 +254,8 @@ class Choiced_menu_boundary:
         menu = self.menu[1]
         menu_img = self.menu[2]
         self.menu_info = [menu, menu_img, self.selected_required_option_name, self.select_add_opt, self.quantity, self.total]
-        print(self.menu_info)
-        print("장바구니 담기 실행")
+        # print(self.menu_info)
+        # print("장바구니 담기 실행")
         self.cmc = Choiced_Menu_control(self.user_main)
         self.cmc.add_cart(self.menu_info)
         self.Choiced_menu_window.destroy()
