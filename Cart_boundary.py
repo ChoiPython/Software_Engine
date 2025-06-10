@@ -32,16 +32,25 @@ class CartItem(tk.Frame):
         image_label.pack(side="left", padx=5)
 
         # 메뉴 이름과 옵션 표시
-        self.formatted_opt = req_option + "\n"
-        for i in range(0, len(add_option), 2):
-            pair = add_option[i:i+2]
-            line = "\t".join(pair)  # 옵션들 사이 공백
-            self.formatted_opt += line + "\n"
-            # print(f"{self.formatted_opt}")
-        self.formatted_opt = self.formatted_opt.strip()
+        if req_option == None :
+            self.formatted_opt=""
+            for i in range(0, len(add_option), 2):
+                pair = add_option[i:i+2]
+                line = "\t".join(pair)  # 옵션들 사이 공백
+                self.formatted_opt += line + "\n"
+                # print(f"{self.formatted_opt}")
+            self.formatted_opt = self.formatted_opt.strip()
+        else:
+            self.formatted_opt = req_option + "\n"
+            for i in range(0, len(add_option), 2):
+                pair = add_option[i:i+2]
+                line = "\t".join(pair)  # 옵션들 사이 공백
+                self.formatted_opt += line + "\n"
+                # print(f"{self.formatted_opt}")
+            self.formatted_opt = self.formatted_opt.strip()
         info_frame = tk.Frame(top_frame)
         info_frame.pack(side="left", fill="x", expand=True, padx=10)
-        tk.Label(info_frame, text=name, font=("Arial", 16, "bold"), pady=5).pack(anchor="w")
+        tk.Label(info_frame, text=name, font=("Arial", 20, "bold"), pady=5).pack(anchor="w")
         tk.Label(info_frame, text=self.formatted_opt, font=("Arial", 13), fg="#555555", pady=2, justify="left", anchor='w').pack(anchor="c")
 
         # 삭제 버튼
@@ -86,13 +95,15 @@ class CartItem(tk.Frame):
     def update_price(self):
         """가격 및 수량 라벨 갱신 + 상위 창 총액 갱신"""
         self.count_label.config(text=str(self.count))
-        self.item_price_label.config(text=f"{self.get_total():,}")
+        # self.item_price_label.config(text=f"{self.get_total():,}")
         self.parent_window.update_total()
 
     def increase_count(self):
         """수량 1 증가"""
         self.count += 1
         self.user_cart[4] += 1
+        # self.user_cart[5] = self.get_total()
+        # print(self.user_cart[5])
         self.update_price()
 
     def decrease_count(self):
@@ -100,6 +111,8 @@ class CartItem(tk.Frame):
         if self.count > 1:
             self.count -= 1
             self.user_cart[4] -= 1
+            # self.user_cart[5] = self.get_total()
+            # print(self.user_cart[5])
             self.update_price()
 
     def delete_item(self):
@@ -236,8 +249,12 @@ class CartWindow(tk.Toplevel):
     def order_items(self):
         """주문 완료 메시지 및 창 종료"""
         total = sum(item.get_total() for item in self.cart_items)
-        messagebox.showinfo("주문 완료", f"{total:,.0f}원이 주문되었습니다!")
-        self.destroy()
+        if len(self.original_cart_data) == 0:
+            messagebox.showinfo("주문실패", "장바구니가 비어 있습니다!")
+            # self.destroy()
+        else:
+            messagebox.showinfo("주문 완료", "주문이 완료되었습니다!") # {total:,.0f}
+            self.destroy()
 
     def close_event(self):
         self.canvas.unbind_all("<MouseWheel>")

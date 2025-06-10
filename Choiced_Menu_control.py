@@ -18,7 +18,7 @@ class Choiced_Menu_control:
                 # print(f"기존 메뉴정보: {cmp[:4]}")
                 # 메뉴 명이 같고                필수 옵션이 같고
                 if menu_info[0] == cmp[0] and menu_info[2] == cmp[2]:
-                    # print(sorted(menu_info[3]) == sorted(cmp[3]))
+                    # 정렬된 추가옵션이 같으면
                     if sorted(menu_info[3]) == sorted(cmp[3]):
                         # 수량만 증가
                         self.user_main.cart[idx][4] += menu_info[4]
@@ -28,6 +28,7 @@ class Choiced_Menu_control:
                 idx+=1
 
             if check == 0:
+                print("menu_info: ",menu_info)
                 self.user_main.cart.append(menu_info)
                     
         # menu: 메뉴 이름

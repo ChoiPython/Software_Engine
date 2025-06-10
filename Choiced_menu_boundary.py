@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 from getMenu import *
 from Choiced_Menu_control import *
+from tkinter import messagebox
 
 class Choiced_menu_boundary:
 
@@ -17,32 +18,37 @@ class Choiced_menu_boundary:
         self.Choiced_menu_window.title("메뉴 선택 화면")
         self.Choiced_menu_window.geometry("600x800+300+100")
         self.Choiced_menu_window.resizable(True, True)
-
-        # 메뉴 데이터 (기본 가격, 필수 옵션, 추가 옵션, 이미지 등)
-        self.menu_data = {
-            "base_price": 5000,
-            "menu_name": "메뉴 A",
-            "image_path": "test.jpg",   # 이미지 경로
-            "required_options": [
-                {"name": "필수 옵션 A", "price": 0},
-                {"name": "필수 옵션 B", "price": 1000},
-                {"name": "필수 옵션 C", "price": 1500},
-                {"name": "필수 옵션 D", "price": 2000},
-            ],
-            "additional_options": [
-                {"name": "추가 옵션 A", "price": 500},
-                {"name": "추가 옵션 B", "price": 700},
-                {"name": "추가 옵션 C", "price": 300},
-                {"name": "추가 옵션 D", "price": 600},
-                {"name": "추가 옵션 E", "price": 400},
-                {"name": "추가 옵션 F", "price": 800},
-            ]
-        }
-        
+        self.Choiced_menu_window.grab_set()
         self.getopt = getMenu()
         self.opt_list = self.getopt.getOption(self.menu[1]) 
         # (('닭꼬지', '매운맛', 0, 1), ('닭꼬지', '순한맛', 0, 1)) 이런식으로 데이터 가져 옴
-        print(f"self.opt_list{self.opt_list}")
+        print(f"self.opt_list: {self.opt_list}")
+        self.req_opt =[]
+        self.add_opt = []
+
+        for i in self.opt_list:
+            if i[3] == 1: # 필수옵션
+                self.req_opt.append(i)
+
+            else:   # 추가옵션
+                self.add_opt.append(i)
+        print(f"req_opt: {self.req_opt}")
+        print(f"add_opt: {self.add_opt}")
+        # 메뉴 데이터 (기본 가격, 필수 옵션, 추가 옵션, 이미지 등)
+        
+                # {"name": "필수 옵션 A", "price": 0},
+                # {"name": "필수 옵션 B", "price": 1000},
+                # {"name": "필수 옵션 C", "price": 1500},
+                # {"name": "필수 옵션 D", "price": 2000},
+            
+        self.menu_data = {
+            "base_price": self.menu[3],
+            "menu_name": self.menu[1],
+            "image_path": self.menu[2],   # 이미지 경로
+            "required_options": [{'name': req_opt[1], 'price': req_opt[2]} for req_opt in self.req_opt],
+            "additional_options": [{'name': add_opt[1], 'price': add_opt[2]} for add_opt in self.add_opt]
+        }
+        
         
         # self.select_req_opt = []        # 필수옵션
         self.select_add_opt = []        # 선택한 추가옵션
@@ -103,7 +109,8 @@ class Choiced_menu_boundary:
         Button(qty_frame, text="+", width=3, command=self.increase_quantity).pack(side="left")
 
         # 합계 금액 표시
-        self.total_label = Label(self.left_frame, text="합계금액 0 원", fg="red", font=("Arial", 12))
+        self.total = self.menu[3]
+        self.total_label = Label(self.left_frame, text=f"합계금액 {self.total} 원", fg="red", font=("Arial", 12))
         self.total_label.pack(pady=10)
 
     def setFrame_pack(self, frame, pos, wid, hei):
@@ -134,7 +141,7 @@ class Choiced_menu_boundary:
             btn = Button(
                 target_frame,
                 text=f"{option['name']} {option['price']}원",
-                width=18,
+                width=20,
                 relief="raised",
                 command=lambda name=option['name'], price=option['price']: self.select_required_option(name, price)
             )
@@ -160,7 +167,7 @@ class Choiced_menu_boundary:
             btn = Button(
                 target_frame,
                 text=f"{option['name']} {option['price']}원",
-                width=18,
+                width=20,
                 relief="raised",
                 command=lambda name=option['name'], price=option['price']: self.toggle_additional_option(name, price)
             )
@@ -251,14 +258,26 @@ class Choiced_menu_boundary:
         # self.select_add_opt: 선택한 추가 옵션 리스트
         # self.quantity: 총 수량
         # self.total: 총 가격
-        menu = self.menu[1]
-        menu_img = self.menu[2]
-        self.menu_info = [menu, menu_img, self.selected_required_option_name, self.select_add_opt, self.quantity, self.total]
-        # print(self.menu_info)
-        # print("장바구니 담기 실행")
-        self.cmc = Choiced_Menu_control(self.user_main)
-        self.cmc.add_cart(self.menu_info)
-        self.Choiced_menu_window.destroy()
+        if len(self.req_opt) == 0:  # 필수옵션이 없을 경우 선택 안해도 장바구니에 담기게
+            menu = self.menu[1]
+            menu_img = self.menu[2]
+            self.menu_info = [menu, menu_img, self.selected_required_option_name, self.select_add_opt, self.quantity, self.total]
+            self.cmc = Choiced_Menu_control(self.user_main)
+            self.cmc.add_cart(self.menu_info)
+            self.Choiced_menu_window.destroy()
+
+        else:   # 필수옵션이 있는 경우 선택안하면 장바구니에 안담기게
+            if self.selected_required_option_name == None:
+                messagebox.showinfo("장바구니 등록실패", "필수옵션을 선택해주십시오.")
+                
+            else:   
+                menu = self.menu[1]
+                menu_img = self.menu[2]
+                self.menu_info = [menu, menu_img, self.selected_required_option_name, self.select_add_opt, self.quantity, self.total]
+                self.cmc = Choiced_Menu_control(self.user_main)
+                self.cmc.add_cart(self.menu_info)
+                self.Choiced_menu_window.destroy()
+        
 
 # 프로그램 시작
 if __name__ == "__main__":
