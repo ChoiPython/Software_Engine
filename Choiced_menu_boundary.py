@@ -1,6 +1,6 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from getMenu import *
+from getMenu_control import *
 from Choiced_Menu_control import *
 from tkinter import messagebox
 
@@ -258,12 +258,6 @@ class Choiced_menu_boundary:
         self.Choiced_menu_window.destroy()
 
     def add_to_cart(self):
-        # menu: 메뉴 이름
-        # menu_img: 메뉴 이미지
-        # self.selected_required_option_name 선택한 필수 옵션
-        # self.select_add_opt: 선택한 추가 옵션 리스트
-        # self.quantity: 총 수량
-        # self.total: 총 가격
         if len(self.req_opt) == 0:  # 필수옵션이 없을 경우 선택 안해도 장바구니에 담기게
             menu = self.menu[1]
             menu_img = self.menu[2]
