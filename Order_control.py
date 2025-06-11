@@ -16,12 +16,19 @@ class OrderControl:
             for item in cart_data:
                 menu_name = item['menu_name']
                 option = item['option']
+
+
+                if isinstance(option, list):
+                    option = '+'.join(option)
+
                 quantity = item['quantity']
                 price = item['price']
                 image_path = item['image_path']
 
                 insert_query = """
-                INSERT INTO order_list (table_num, menu_name, option, ammount, prise, image_path)
+
+                INSERT INTO order_list (table_num, menu_name, image, quantity, opt, price)
+
                 VALUES (%s, %s, %s, %s, %s, %s)
                 """
                 self.cursor.execute(insert_query, (table_num, menu_name, option, quantity, price, image_path))
