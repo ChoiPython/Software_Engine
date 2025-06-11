@@ -57,7 +57,9 @@ class UserOrderRist:
         info_frame.pack(side="left", padx=15, fill="x", expand=True)
 
         tk.Label(info_frame, text=name, font=("Arial", 14, "bold")).pack(anchor="w")
-        tk.Label(info_frame, text=option, font=("Arial", 11)).pack(anchor="w")
+        option_list = option.split('+') if isinstance(option, str) else [str(option)]
+        for opt in option_list:
+            tk.Label(info_frame, text=f"- {opt}", font=("Arial", 11)).pack(anchor="w")
 
         bottom_frame = tk.Frame(frame)
         bottom_frame.pack(fill="x", pady=5)
