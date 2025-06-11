@@ -209,7 +209,7 @@ class Menu_add:
             y_ratio = 450 / 320
             img = Image.open(file_path)
             img = img.resize((int(150*x_ratio), int(150*y_ratio)), Image.LANCZOS)
-            self.photo = PhotoImage(img)
+            self.photo = ImageTk.PhotoImage(img)
             self.photo_label.config(image=self.photo, text="")
             self.photo_label.image = self.photo
             self.image_path = file_path
