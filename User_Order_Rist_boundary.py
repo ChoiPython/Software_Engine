@@ -1,58 +1,42 @@
+# User_Order_Rist_boundary.py
+
 import tkinter as tk
 from tkinter import messagebox
+import mysql.connector
 from PIL import Image, ImageTk
-from Cart_boundary import sample_cart
 
-def show_order_window_from_cart(menu_list):
-    root = tk.Toplevel()
-    root.title("주문 내역")
-    root.geometry("700x800")
+class UserOrderRist:
 
-    # ----------------------
-    # 테이블 번호 + 주문 내역
-    # ----------------------
-    top_frame = tk.Frame(root, pady=10)
-    top_frame.pack(fill="x")
+    def __init__(self, table_number=1):
+        self.table_number = table_number
+        self.total_price = 0
 
-    tk.Label(top_frame, text="테이블 1", font=("Arial", 20)).pack(side="left", padx=30)
-    tk.Label(top_frame, text="주문 내역", font=("Arial", 20)).pack(side="right", padx=30)
+    def fetch_orders_by_table(self):
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="0000",
+            database="sys"
+        )
+        cursor = conn.cursor(dictionary=True)
 
-    # --------------------------
-    # 주문 항목 프레임 + 스크롤
-    # --------------------------
-    order_frame_container = tk.Frame(root)
-    order_frame_container.pack(fill="both", expand=True)
+        query = "SELECT * FROM order_list WHERE table_num = %s"
+        cursor.execute(query, (self.table_number,))
+        results = cursor.fetchall()
 
-    canvas = tk.Canvas(order_frame_container)
-    scrollbar = tk.Scrollbar(order_frame_container, orient="vertical", command=canvas.yview)
-    scrollable_frame = tk.Frame(canvas)
+        conn.close()
+        return results
 
-    scrollable_frame.bind(
-        "<Configure>",
-        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
-    )
+    def show_payment_popup(self):
+        messagebox.showinfo("결제 완료", "결제 요청이 완료되었습니다.")
+        self.root.destroy()
 
-    window_id = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-
-    def sync_scrollable_width(event):
-        canvas.itemconfig(window_id, width=event.width)
-
-    canvas.bind("<Configure>", sync_scrollable_width)
-    canvas.configure(yscrollcommand=scrollbar.set)
-
-    canvas.pack(side="left", fill="both", expand=True)
-    scrollbar.pack(side="right", fill="y")
-
-    # --------------------------
-    # 메뉴 항목 생성 함수
-    # --------------------------
-    def create_menu_item(parent, name, option, qty, price, img_path):
+    def create_menu_item(self, parent, name, option, qty, price, img_path):
         frame = tk.Frame(parent, relief="solid", bd=1, padx=10, pady=5)
         frame.pack(pady=10, padx=20, fill="x", expand=True)
 
         try:
-            img = Image.open(img_path)
-            img = img.resize((100, 100))
+            img = Image.open(img_path).resize((100, 100))
             photo = ImageTk.PhotoImage(img)
         except:
             photo = None
@@ -79,62 +63,66 @@ def show_order_window_from_cart(menu_list):
         tk.Label(bottom_frame, text=qty).pack(side="left")
         tk.Label(bottom_frame, text=price).pack(side="right")
 
-    # --------------------------
-    # 총 주문 금액 계산 및 항목 출력
-    # --------------------------
-    total_price = 0
-    for order in menu_list:
-        total_price += order['price']
-        create_menu_item(
-            scrollable_frame,
-            name=order['menu_name'],
-            option=order['option'],
-            qty=f"{order['quantity']}개",
-            price=f"{order['price']:,}원",
-            img_path=order['image_path']
+    def run(self):
+        self.root = tk.Toplevel()
+        self.root.title("주문 내역")
+        self.root.geometry("700x800")
+
+        # 상단
+        top_frame = tk.Frame(self.root, pady=10)
+        top_frame.pack(fill="x")
+        tk.Label(top_frame, text=f"테이블 {self.table_number}", font=("Arial", 20)).pack(side="left", padx=30)
+        tk.Label(top_frame, text="주문 내역", font=("Arial", 20)).pack(side="right", padx=30)
+
+        # 스크롤 프레임
+        order_frame_container = tk.Frame(self.root)
+        order_frame_container.pack(fill="both", expand=True)
+
+        canvas = tk.Canvas(order_frame_container)
+        scrollbar = tk.Scrollbar(order_frame_container, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas)
+
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
 
-    # --------------------------
-    # 총 주문 금액
-    # --------------------------
-    total_frame = tk.Frame(root, pady=20)
-    total_frame.pack(fill="x")
+        window_id = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.bind("<Configure>", lambda e: canvas.itemconfig(window_id, width=e.width))
 
-    tk.Label(total_frame, text="주문금액", font=("Arial", 18)).pack(side="left", padx=20)
-    tk.Label(total_frame, text=f"{total_price:,}원", fg="red", font=("Arial", 18, "bold")).pack(side="right", padx=20)
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
 
-    # --------------------------
-    # 버튼 영역
-    # --------------------------
-    def on_payment():
-        messagebox.showinfo("결제 완료", "결제 요청이 완료되었습니다.")
-        root.destroy()
+        # 주문 불러오기
+        orders = self.fetch_orders_by_table()
+        for order in orders:
+            self.total_price += order['prise']
+            self.create_menu_item(
+                scrollable_frame,
+                name=order['menu_name'],
+                option=order['option'],
+                qty=f"{order['ammount']}개",
+                price=f"{order['prise']:,}원",
+                img_path=order['image_path']
+            )
 
-    button_frame = tk.Frame(root, pady=20)
-    button_frame.pack()
+        # 총액
+        total_frame = tk.Frame(self.root, pady=20)
+        total_frame.pack(fill="x")
+        tk.Label(total_frame, text="주문금액", font=("Arial", 18)).pack(side="left", padx=20)
+        tk.Label(total_frame, text=f"{self.total_price:,}원", fg="red", font=("Arial", 18, "bold")).pack(side="right", padx=20)
 
-    tk.Button(button_frame, text="결제 요청", width=20, height=2, command=on_payment).pack(side="left", padx=30)
-    tk.Button(button_frame, text="닫기", width=20, height=2, command=root.destroy).pack(side="right", padx=30)
+        # 버튼
+        button_frame = tk.Frame(self.root, pady=20)
+        button_frame.pack()
+        tk.Button(button_frame, text="결제 요청", width=20, height=2, command=self.show_payment_popup).pack(side="left", padx=30)
+        tk.Button(button_frame, text="닫기", width=20, height=2, command=self.root.destroy).pack(side="right", padx=30)
 
-    def _on_mousewheel(event):
-        canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        # 마우스 휠
+        def _on_mousewheel(event):
+            canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
-    canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        canvas.bind_all("<MouseWheel>", _on_mousewheel)
 
-if __name__ == "__main__":
-    # CartWindow에서 가져온 샘플 cart를 주문 목록에 맞는 dict 형태로 변환
-    converted_cart = []
-    for item in sample_cart:
-        converted_cart.append({
-            'menu_name': item[0],
-            'image_path': item[1],
-            'option': item[2] + "\n" + "\t".join(item[3]),
-            'quantity': item[4],
-            'price': item[5]
-        })
-
-    # 주문 내역 창 띄우기
-    root = tk.Tk()
-    root.withdraw()
-    show_order_window_from_cart(converted_cart)
-    root.mainloop()
+        self.root.mainloop()

@@ -152,8 +152,10 @@ class User_main:
 
     # 주문목록 버튼 이벤트
     def orderlistui_event(self):
-        # self.cart(장바구니에 들어 있는 모든 정보 변수)
-        print("주문목록 화면이 열림")    
+        print("주문목록 화면이 열림")
+        from User_Order_Rist_boundary import UserOrderRist
+        order_window = UserOrderRist(table_number=1)  # 실제 테이블 번호 연동 가능
+        order_window.run()  
 
 
         

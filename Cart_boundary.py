@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용dyddsdsds
 from User_main_boundary import *
-
+from Order_control import OrderControl
 
 class CartItem(tk.Frame):
     """장바구니에 들어가는 개별 메뉴 항목 UI"""
@@ -262,25 +262,23 @@ class CartWindow(tk.Toplevel):
     def order_items(self):
     # 장바구니에서 데이터 수집
         cart_data = []
-        for item in self.cart_items:
+
+        for item in self.original_cart_data:
             cart_data.append({
-                'menu_name': item.name,
-                'option': item.formatted_opt,
-                'quantity': item.count,
-                'price': item.get_total(),
-                'image_path': item.image_path
-        })
+                'menu_name': item[0],
+                'option': [item[2]] + item[3],  # 필수 + 추가 옵션
+                'quantity': item[4],
+                'price': item[5],
+                'image_path': item[1]
+            })
 
-    # 주문 완료 알림
+    # ✅ DB에 저장
+        order_control = OrderControl()
+        table_number = 1  # 하드코딩 or 실제 table_num 받을 수 있게 수정 가능
+        order_id = order_control.save_order(table_number, cart_data)
+
         total = sum(item.get_total() for item in self.cart_items)
-        messagebox.showinfo("주문 완료", f"{total:,.0f}원이 주문되었습니다!")
-
-
-    
-    # 주문 내역 창 호출
-        show_order_window_from_cart(cart_data)
-
-    # 장바구니 닫기
+        messagebox.showinfo("주문 완료", f"주문번호 {order_id}\n{total:,.0f}원이 주문되었습니다!")
         self.destroy()
     
     def close_event(self):
