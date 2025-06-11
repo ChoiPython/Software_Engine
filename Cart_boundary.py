@@ -33,16 +33,16 @@ class CartItem(tk.Frame):
         image_label.pack(side="left", padx=5)
 
         # 메뉴 이름과 옵션 표시
-        self.formatted_opt = req_option + "\n"
-        for i in range(0, len(add_option), 2):
-            pair = add_option[i:i+2]
-            line = "\t".join(pair)  # 옵션들 사이 공백
-            self.formatted_opt += line + "\n"
-            # print(f"{self.formatted_opt}")
-        self.formatted_opt = self.formatted_opt.strip()
-        info_frame = tk.Frame(top_frame)
-        info_frame.pack(side="left", fill="x", expand=True, padx=10)
-        tk.Label(info_frame, text=name, font=("Arial", 16, "bold"), pady=5).pack(anchor="w")
+        # self.formatted_opt = req_option + "\n"
+        # for i in range(0, len(add_option), 2):
+        #     pair = add_option[i:i+2]
+        #     line = "\t".join(pair)  # 옵션들 사이 공백
+        #     self.formatted_opt += line + "\n"
+        #     # print(f"{self.formatted_opt}")
+        # self.formatted_opt = self.formatted_opt.strip()
+        # info_frame = tk.Frame(top_frame)
+        # info_frame.pack(side="left", fill="x", expand=True, padx=10)
+        # tk.Label(info_frame, text=name, font=("Arial", 16, "bold"), pady=5).pack(anchor="w")
         if req_option == None :
             self.formatted_opt=""
             for i in range(0, len(add_option), 2):
@@ -262,13 +262,17 @@ class CartWindow(tk.Toplevel):
     def order_items(self):
     # 장바구니에서 데이터 수집
         cart_data = []
-        for item in self.cart_items:
+        # print(self.original_cart_data[3])
+        # print(self.original_cart_data[2] + self.original_cart_data[3])
+        # [['닭꼬지', 'test.jpg', '매운맛', [], 1, 1300]]
+        for item in self.original_cart_data:
+            print([item[2]] + item[3])
             cart_data.append({
-                'menu_name': item.name,
-                'option': item.formatted_opt,
-                'quantity': item.count,
-                'price': item.get_total(),
-                'image_path': item.image_path
+                'menu_name': item[0],
+                'option': [item[2]] + item[3],  # 필수옵션 + 추가옵션
+                'quantity': item[4],
+                'price': item[5],
+                'image_path': item[1]
         })
 
     # 주문 완료 알림

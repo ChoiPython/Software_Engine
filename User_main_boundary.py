@@ -145,7 +145,7 @@ class User_main:
         # print(self.cart)
         self.cart_ui = CartWindow(self.cart)
         print(self.cart)
-        self.cart_ui = CartWindow(self.cart)
+
         
         self.cart_ui.grab_set()
 
