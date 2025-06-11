@@ -1,6 +1,6 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from getMenu import *
+from getMenu_control import *
 from Choiced_Menu_control import *
 from tkinter import messagebox
 

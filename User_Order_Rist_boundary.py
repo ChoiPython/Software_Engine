@@ -13,10 +13,11 @@ class UserOrderRist:
 
     def fetch_orders_by_table(self):
         conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="0000",
-            database="sys"
+            host='localhost',
+            user='soft',
+            password='0000',
+            database='table_order',
+            charset='utf8'
         )
         cursor = conn.cursor(dictionary=True)
 
@@ -96,15 +97,16 @@ class UserOrderRist:
 
         # 주문 불러오기
         orders = self.fetch_orders_by_table()
+        print(orders)
         for order in orders:
-            self.total_price += order['prise']
+            self.total_price += order['price']
             self.create_menu_item(
                 scrollable_frame,
                 name=order['menu_name'],
-                option=order['option'],
-                qty=f"{order['ammount']}개",
-                price=f"{order['prise']:,}원",
-                img_path=order['image_path']
+                option=order['opt'],
+                qty=f"{order['quantity']}개",
+                price=f"{order['price']:,}원",
+                img_path=order['image']
             )
 
         # 총액

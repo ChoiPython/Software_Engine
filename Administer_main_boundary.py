@@ -1,6 +1,6 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from getMenu import *
+from getMenu_control import *
 from Menu_adj_main_boundary import *
 from Menu_del_boundary import *
 from Menu_add_boundary import *

@@ -1,7 +1,7 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from tkinter import messagebox
-from getMenu import *
+from getMenu_control import *
 from Choiced_menu_boundary import *
 from Cart_boundary import *
 
