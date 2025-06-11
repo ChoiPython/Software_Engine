@@ -130,6 +130,7 @@ class User_main:
         # print(menu)
         # print("장바구니에 담기")
         self.cmb = Choiced_menu_boundary(self, menu)
+        # self.cmb.ShowUi()
 
 
     # 결제 요청 버튼 이벤트
@@ -143,7 +144,8 @@ class User_main:
     def cart_event(self):
         # print("장바구니가 열림")
         # print(self.cart)
-        self.cart_ui = CartWindow(self.cart)
+        self.cart_ui = Cart()
+        self.cart_ui.show_cart(self.cart)
         print(self.cart)
 
         

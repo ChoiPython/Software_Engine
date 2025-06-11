@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용dyddsdsds
-from User_main_boundary import *
 
 
 class CartItem(tk.Frame):
@@ -79,10 +78,10 @@ class CartItem(tk.Frame):
         bottom_frame.pack(fill="x", expand=True, pady=2)
 
         # 수량 조절 버튼 및 라벨
-        tk.Button(bottom_frame, text="-", command=self.decrease_count, width=5, bg="#eeeeee").pack(side="left", padx=2)
+        tk.Button(bottom_frame, text="-", command=self.decrease_event, width=5, bg="#eeeeee").pack(side="left", padx=2)
         self.count_label = tk.Label(bottom_frame, text=str(self.count), width=5, font=("Arial", 12))
         self.count_label.pack(side="left", padx=2)
-        tk.Button(bottom_frame, text="+", command=self.increase_count, width=5, bg="#eeeeee").pack(side="left", padx=2)
+        tk.Button(bottom_frame, text="+", command=self.increase_event, width=5, bg="#eeeeee").pack(side="left", padx=2)
 
         # 현재 총 금액 표시
         self.item_price_label = tk.Label(
@@ -110,7 +109,7 @@ class CartItem(tk.Frame):
         # self.item_price_label.config(text=f"{self.get_total():,}")
         self.parent_window.update_total()
 
-    def increase_count(self):
+    def increase_event(self):
         """수량 1 증가"""
         self.count += 1
         self.user_cart[4] += 1
@@ -118,7 +117,7 @@ class CartItem(tk.Frame):
         # print(self.user_cart[5])
         self.update_price()
 
-    def decrease_count(self):
+    def decrease_event(self):
         """수량 1 감소 (최소 1)"""
         if self.count > 1:
             self.count -= 1
@@ -133,14 +132,19 @@ class CartItem(tk.Frame):
         self.parent_window.remove_item(self, self.user_cart)
 
 
-class CartWindow(tk.Toplevel):
+class Cart(tk.Toplevel):
     """장바구니 메인 창 UI"""
 
-    def __init__(self, cart):
+    def __init__(self):
         super().__init__()
+        # self.show_cart()
+
+    def show_cart(self, cart):
+        self.cart = cart
+
         self.title("장바구니")
         self.geometry("600x800+300+100")  # 창 크기 및 위치
-        self.original_cart_data = cart
+        self.original_cart_data = self.cart
         self.cart_items = []  # 장바구니 항목 목록
 
         # --- 상단 타이틀 영역 ---
@@ -197,14 +201,8 @@ class CartWindow(tk.Toplevel):
         inner_button_frame.pack(pady=5)  # 위아래 여백 약간
 
         tk.Button(inner_button_frame, text="닫기", height=4, width=20, command=self.destroy).pack(side="right", padx=10)
-        tk.Button(inner_button_frame, text="주문하기", height=4, width=20, command=self.order_items).pack(side="left", padx=10)
-
-        # --- 테스트용 샘플 메뉴 추가 ---
-        # self.add_item("메뉴0", "추가 옵션", 10000, "test.jpg")
-        # self.add_item("메뉴1", "추가 옵션", 9000, "test2.jpg")
-        # self.add_item("메뉴2", "추가 옵션", 8000, "test.jpg")
-        # self.add_item("메뉴3", "추가 옵션", quantity,7000, "test2.jpg")
-        idx= 0
+        tk.Button(inner_button_frame, text="주문하기", height=4, width=20, command=self.order_event).pack(side="left", padx=10)
+        idx = 0
         for i in self.original_cart_data:
             # menu: 메뉴 이름
             # menu_img: 메뉴 이미지
@@ -213,7 +211,7 @@ class CartWindow(tk.Toplevel):
             # self.quantity: 총 수량
             # self.total: 총 가격
             # print(f"print-i:{i}")
-            self.add_item(cart[idx], i[0], i[2], i[3], i[4], i[5], i[1])
+            self.add_item(self.cart[idx], i[0], i[2], i[3], i[4], i[5], i[1])
             idx += 1
 
 
@@ -226,9 +224,6 @@ class CartWindow(tk.Toplevel):
         canvas_width = event.width
         self.canvas.itemconfig(self.canvas_window, width=canvas_width)    
 
-    # def _on_mousewheel(self, event):
-    #     """마우스 휠로 스크롤 가능하도록 처리"""
-    #     self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
     def _bind_mousewheel(self, event):
         self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
 
@@ -259,14 +254,12 @@ class CartWindow(tk.Toplevel):
         total = sum(item.get_total() for item in self.cart_items)
         self.total_label.config(text=f"{total:,.0f}")
 
-    def order_items(self):
+    # 주문하기 버튼 이벤트
+    def order_event(self):
     # 장바구니에서 데이터 수집
         cart_data = []
-        # print(self.original_cart_data[3])
-        # print(self.original_cart_data[2] + self.original_cart_data[3])
-        # [['닭꼬지', 'test.jpg', '매운맛', [], 1, 1300]]
+        
         for item in self.original_cart_data:
-            print([item[2]] + item[3])
             cart_data.append({
                 'menu_name': item[0],
                 'option': [item[2]] + item[3],  # 필수옵션 + 추가옵션
@@ -274,18 +267,18 @@ class CartWindow(tk.Toplevel):
                 'price': item[5],
                 'image_path': item[1]
         })
-
+        
     # 주문 완료 알림
         total = sum(item.get_total() for item in self.cart_items)
         messagebox.showinfo("주문 완료", f"{total:,.0f}원이 주문되었습니다!")
 
+    # 장바구니 닫기
+        self.destroy()
 
     
     # 주문 내역 창 호출
-        show_order_window_from_cart(cart_data)
+        # show_order_window_from_cart(cart_data)
 
-    # 장바구니 닫기
-        self.destroy()
     
     def close_event(self):
         self.canvas.unbind_all("<MouseWheel>")

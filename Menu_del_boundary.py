@@ -119,6 +119,7 @@ class Menu_del:
     def menu_del_event(self, menu): # 컨트롤 클래스로 구현하기  - 데이터는 삭제됨 / UI에서는 아직 삭제 안됨.
         delete = Menu_del_control()
         delete.menu_del(menu[1])
+        delete.option_del(menu[1])
         print(f"{menu[1]} 메뉴 삭제")       # menu[1]: 메뉴이름
         self.setMenu(category=menu[0])      # menu[0]: 카테고리
 

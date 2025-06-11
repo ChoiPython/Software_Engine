@@ -31,7 +31,7 @@ class PlaceholderEntry(Entry):
 
 class Menu_adj:
     def __init__(self, menu_list, menu):
-        print(menu)
+        # print(menu)
         self.menu_data = {
             'category':  menu[0],
             'menu':  menu[1],
@@ -46,10 +46,10 @@ class Menu_adj:
         self.get = getMenu()
         self.option_data = self.get.getOption(menu[1])  
         for i in self.option_data:
-            print("i", i)
+            # print("i", i)
             if i[3] == 1: # 필수옵션
                 data = [i[1], i[2]]
-                print(data)
+                # print(data)
                 self.req_opt.append(data)
 
             else:   # 추가옵션
@@ -66,7 +66,7 @@ class Menu_adj:
 
     def run(self):
         self.menu_add_window = Toplevel()
-        self.menu_add_window.title("메뉴 등록")
+        self.menu_add_window.title("메뉴 수정")
         self.menu_add_window.geometry("1000x600")
         self.menu_add_window.resizable(False, False)
         self.menu_add_window.configure(bg="#ffffff")
@@ -123,7 +123,7 @@ class Menu_adj:
             'description': description if description not in ["", "메뉴 설명"] else None,
             'image': self.image_path
         }'''
-        print(self.menu_data)
+        # print(self.menu_data)
         if self.menu_data['menu'] == None:
             self.menu_text = PlaceholderEntry(self.ent_frame, placeholder="메뉴명", width=int(25*x_ratio), relief="solid", borderwidth=1)
             self.menu_text.pack(side='top', pady = 20)
@@ -226,7 +226,7 @@ class Menu_adj:
             y_ratio = 450 / 320
             img = Image.open(file_path)
             img = img.resize((int(150*x_ratio), int(150*y_ratio)), Image.LANCZOS)
-            self.photo = PhotoImage(img)
+            self.photo = ImageTk.PhotoImage(img)
             self.photo_label.config(image=self.photo, text="")
             self.photo_label.image = self.photo
             self.image_path = file_path
@@ -238,7 +238,7 @@ class Menu_adj:
         price = self.price_txt.get()
         description = self.desc_txt.get()
 
-        print("test",category, menu_name, price, description)
+        # print("test",category, menu_name, price, description)
 
         # 데이터 유효성 검사 및 변환
         # 가격이 숫자가 아니면 등록 불가
@@ -266,7 +266,7 @@ class Menu_adj:
         result_opt = self.adj_control.Option_adj(self.menu_data, self.req_opt, self.add_opt)
 
         # 결과 메시지 출력
-        res = messagebox.showinfo("등록 결과", result_menu)
+        res = messagebox.showinfo(f"메뉴 등록 결과 {result_menu}\n옵션 등록 결과{result_opt}")
         self.menu_add_window.destroy()
 
 
@@ -276,13 +276,13 @@ class Menu_adj:
 
     def open_req_option(self):
         self.req = self.Option_boundary('필수')
-        print(self.req)
+        # print(self.req)
 
 
 
     def open_add_option(self):
         self.add = self.Option_boundary('추가')
-        print(self.add)
+        # print(self.add)
 
 
 
@@ -331,12 +331,12 @@ class Menu_adj:
         # 필수 옵션 리스트
         if opt == '필수':
             self.req_opt.append([name, price])
-            print("req_opt: ",self.req_opt)
+            # print("req_opt: ",self.req_opt)
         
         # 추가 옵션 리스트
         else:
             self.add_opt.append([name, price])
-            print("add_opt: ",self.add_opt)
+            # print("add_opt: ",self.add_opt)
 
         # 입력된 데이터 유지
         category = self.category_var.get()

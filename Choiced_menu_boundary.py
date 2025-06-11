@@ -176,7 +176,7 @@ class Choiced_menu_boundary:
 
     def showBottomButtons(self):
         # 하단 버튼: 닫기, 장바구니 담기
-        Button(self.right_bottom_frame, text="닫기", width=15, command=self.close_window).pack(side="left", padx=20, pady=20)
+        Button(self.right_bottom_frame, text="닫기", width=15, command=self.close_event).pack(side="left", padx=20, pady=20)
         Button(self.right_bottom_frame, text="장바구니 담기", width=15, command=self.add_to_cart).pack(side="left", padx=20, pady=20)
 
     def select_required_option(self, name, price):
@@ -248,7 +248,7 @@ class Choiced_menu_boundary:
             self.qty_label.config(text=str(self.quantity))
             self.update_total()
 
-    def close_window(self):
+    def close_event(self):
         self.Choiced_menu_window.destroy()
 
     def add_to_cart(self):

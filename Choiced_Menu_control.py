@@ -8,28 +8,25 @@ class Choiced_Menu_control:
 
     
     def add_cart(self, menu_info):
-        
+        def cart_add_count(menu_info, idx):
+            self.user_main.cart[idx][4] += menu_info[4]
+
+        def cart_add_new(menu_info):
+            self.user_main.cart.append(menu_info)
+            
         def Check_cart(menu_info):
             idx = 0
             check = 0   
-            # print(self.user_main.cart)
             for cart in self.user_main.cart:
-                # print(f"선택한 메뉴정보: {menu_info[:4]}")
-                # print(f"기존 메뉴정보: {cmp[:4]}")
-                # 메뉴 명이 같고                필수 옵션이 같고
-                if menu_info[0] == cart[0] and menu_info[2] == cart[2]:
-                    # 정렬된 추가옵션이 같으면
-                    if sorted(menu_info[3]) == sorted(cart[3]):
-                        # 수량만 증가
-                        self.user_main.cart[idx][4] += menu_info[4]
-                        check= 1
-                        break
-
+                # 메뉴 명이 같고                필수 옵션이 같고        정렬된 추가옵션이 같으면
+                if menu_info[0] == cart[0] and menu_info[2] == cart[2] and sorted(menu_info[3]) == sorted(cart[3]):
+                    cart_add_count(menu_info, idx)
+                    check= 1
+                    break
                 idx+=1
 
             if check == 0:  # 새로 추가
-                print("menu_info: ",menu_info)
-                self.user_main.cart.append(menu_info)
+                cart_add_new(menu_info)
                     
         # menu: 메뉴 이름
         # menu_img: 메뉴 이미지
