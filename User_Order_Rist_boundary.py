@@ -13,11 +13,10 @@ class UserOrderRist:
 
     def fetch_orders_by_table(self):
         conn = mysql.connector.connect(
-            host='localhost',
-            user='soft',
-            password='0000',
-            database='table_order',
-            charset='utf8'
+            host="localhost",
+            user="root",
+            password="0000",
+            database="sys"
         )
         cursor = conn.cursor(dictionary=True)
 
@@ -57,9 +56,7 @@ class UserOrderRist:
         info_frame.pack(side="left", padx=15, fill="x", expand=True)
 
         tk.Label(info_frame, text=name, font=("Arial", 14, "bold")).pack(anchor="w")
-        option_list = option.split('+') if isinstance(option, str) else [str(option)]
-        for opt in option_list:
-            tk.Label(info_frame, text=f"- {opt}", font=("Arial", 11)).pack(anchor="w")
+        tk.Label(info_frame, text=option, font=("Arial", 11)).pack(anchor="w")
 
         bottom_frame = tk.Frame(frame)
         bottom_frame.pack(fill="x", pady=5)
@@ -99,16 +96,15 @@ class UserOrderRist:
 
         # 주문 불러오기
         orders = self.fetch_orders_by_table()
-        print(orders)
         for order in orders:
-            self.total_price += order['price']
+            self.total_price += order['prise']
             self.create_menu_item(
                 scrollable_frame,
                 name=order['menu_name'],
-                option=order['opt'],
-                qty=f"{order['quantity']}개",
-                price=f"{order['price']:,}원",
-                img_path=order['image']
+                option=order['option'],
+                qty=f"{order['ammount']}개",
+                price=f"{order['prise']:,}원",
+                img_path=order['image_path']
             )
 
         # 총액
