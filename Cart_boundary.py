@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk  # 이미지 처리를 위해 PIL 사용dyddsdsds
-
+from User_main_boundary import *
+from Order_control import OrderControl
 
 class CartItem(tk.Frame):
     """장바구니에 들어가는 개별 메뉴 항목 UI"""
@@ -258,27 +259,24 @@ class Cart(tk.Toplevel):
     def order_event(self):
     # 장바구니에서 데이터 수집
         cart_data = []
-        
+
         for item in self.original_cart_data:
             cart_data.append({
                 'menu_name': item[0],
-                'option': [item[2]] + item[3],  # 필수옵션 + 추가옵션
+                'option': [item[2]] + item[3],  # 필수 + 추가 옵션
                 'quantity': item[4],
                 'price': item[5],
                 'image_path': item[1]
-        })
-        
-    # 주문 완료 알림
+            })
+
+    # ✅ DB에 저장
+        order_control = OrderControl()
+        table_number = 1  # 하드코딩 or 실제 table_num 받을 수 있게 수정 가능
+        order_id = order_control.save_order(table_number, cart_data)
+
         total = sum(item.get_total() for item in self.cart_items)
-        messagebox.showinfo("주문 완료", f"{total:,.0f}원이 주문되었습니다!")
-
-    # 장바구니 닫기
+        messagebox.showinfo("주문 완료", f"주문번호 {order_id}\n{total:,.0f}원이 주문되었습니다!")
         self.destroy()
-
-    
-    # 주문 내역 창 호출
-        # show_order_window_from_cart(cart_data)
-
     
     def close_event(self):
         self.canvas.unbind_all("<MouseWheel>")
@@ -297,14 +295,3 @@ class Cart(tk.Toplevel):
         self.canvas.unbind_all("<MouseWheel>")
         self.destroy()
         
-# ✅ CartWindow.py 또는 cart_boundary.py 맨 위에 샘플 cart를 전역 변수로 선언
-sample_cart = [
-    ["초밥 세트", "images/sushi.jpg", "와사비 있음", ["연어", "참치"], 2, 18000],
-    ["우동", "images/udon.jpg", "매운맛", ["고기추가", "계란추가"], 1, 9000],
-    ["우동", "images/udon.jpg", "매운맛", ["고기추가", "계란추가"], 1, 9000]
-]
-
-# 아래에 if __name__ == "__main__": 안에서는 이걸 다시 불러다 씀
-if __name__ == "__main__":
-    app = CartWindow(sample_cart)
-    app.mainloop()
