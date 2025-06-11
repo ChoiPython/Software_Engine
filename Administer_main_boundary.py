@@ -1,217 +1,113 @@
 from tkinter import *
+from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
-from getMenu import *
-from Menu_adj_main_boundary import *
-from Menu_del_boundary import *
-from Menu_add_boundary import *
+from Menu_adj_control import Menu_adj_control
+from Menu_adj_boundary import Menu_adj
 
 class Administer_main:
-    
     def __init__(self):
-        self.data = getMenu()
+        self.window = Tk()
+        self.window.title("관리자 메인")
+        self.window.geometry("1200x800+100+100")
+        self.data = Menu_adj_control()
         self.Menu_list = self.data.getMenu()
+        self.ShowUi()
+        self.window.mainloop()
 
-        self.Show_Administer_main()
-
-
-    def Show_Administer_main(self):
-        self.admin_main_window = Tk()
-        self.admin_main_window.title("관리자 메인화면")
-        self.admin_main_window.geometry("1200x800+300+100")
-        self.admin_main_window.resizable(False, False)
-        self.ShowUi()       # 화면 출력
-        self.scrollable_frame = self.y_scrollable_frame()        # 스크롤바 생성
-        self.ShowWidget()   # 위젯 출력
-        self.setMenu()      # 메뉴 출력
-        self.admin_main_window.mainloop()
-
-    # 프레임 세팅
     def ShowUi(self):
-        self.head_frame = self.setFrame_pack(self.admin_main_window, 'top', 1200, 100)               # 상단 프레임
-        self.left_frame = self.setFrame_pack(self.admin_main_window, 'left', 200, 700)               # 좌측 프레임
-        self.right_frame = self.setFrame_pack(self.admin_main_window, 'left', 1000, 700)             # 우측 프레임
-        self.right_bottom_frame = self.setFrame_pack(self.right_frame, 'bottom', 1000, 100)    # 우측 하단 프레임
-        self.right_top_frame = self.setFrame_pack(self.right_frame, 'top',1000, 600)           # 우측 상단 프레임
+        # 프레임 구성
+        self.head_frame = Frame(self.window, height=60, bg="#f0f0f0")
+        self.head_frame.pack(side=TOP, fill=X)
+        self.left_frame = Frame(self.window, width=200, bg="#e0e0e0")
+        self.left_frame.pack(side=LEFT, fill=Y)
+        self.right_frame = Frame(self.window, bg="#ffffff")
+        self.right_frame.pack(side=RIGHT, fill=BOTH, expand=True)
+        self.right_top_frame = Frame(self.right_frame)
+        self.right_top_frame.pack(side=TOP, fill=BOTH, expand=True)
+        self.right_bottom_frame = Frame(self.right_frame, height=60)
+        self.right_bottom_frame.pack(side=BOTTOM, fill=X)
 
-        self.table_num = self.setlabel(self.head_frame, 'left', '관리자 메인 화면', 30, 1, anc = 'w')         # 테이블 번호 라벨
+        # 헤더
+        Label(self.head_frame, text="메뉴 관리", font=("맑은 고딕", 20, "bold"), bg="#f0f0f0").pack(pady=10)
 
-    def setMenu(self, category = '1.메인메뉴'):      # 메뉴 생성 함수 / 카테고리 변수를 받아서 출력
-        self.Menu_list = self.data.getMenu()
-        menu = sorted(list((info for info in self.Menu_list if info[0] == category)), key = lambda x: x[1]) # 카테고리에 맞는 메뉴들
-        
-        for i in range(len(menu)):
-            row = i // 4    # 4개씩 출력
-            col = i % 4 
+        # 카테고리 버튼
+        self.cate_buttons = []
+        self.cate_var = StringVar()
+        self.cate_var.set("1.메인메뉴")
+        self.ShowWidget()
 
-            if i == 0:  # 메뉴 프레임 초기화
-                for widget in self.scrollable_frame.winfo_children():
-                    widget.destroy()
-
-            frame = self.setFrame_grid(self.scrollable_frame, 220, 230, row, col)
-            self.setlabel(frame, 'top', None, 220, 150, img = menu[i][2])           # 메뉴 이미지 생성
-            self.setlabel(frame, 'top', menu[i][1], 10, 1, anc='w', t_font=("맑은고딕", 13))           # 메뉴명 라벨 생성 
-            self.setlabel(frame, 'top', menu[i][3],10, 1, anc='w', t_font=("맑은고딕", 13))         # 메뉴 가격 라벨 생성
-            # self.add_cart_bt = self.setButton(frame, 'right', '담기', 10, 1, x=10, y=5)                # 담기 버튼 생성
-            # self.add_cart_bt.config(command=self.add_cart_event)         
-
+        # 메뉴 표시
+        self.setMenu(self.cate_var.get())
 
     def ShowWidget(self):
-        # 카테고리 버튼 배치
-        self.cate = sorted(list(set(cate[0] for cate in self.Menu_list)))   # 카테고리 데이터 불러오기 완료 - 순서를 위해 카테고리 데이터에 번호를 붙임
+        # 카테고리 추출 및 버튼 생성
+        for widget in self.left_frame.winfo_children():
+            widget.destroy()
+        self.cate_list = sorted(list(set(info[0] for info in self.Menu_list)))
+        for cate in self.cate_list:
+            btn = Button(self.left_frame, text=cate, width=20, height=2, command=lambda c=cate: self.cate_event(c))
+            btn.pack(pady=5)
+            self.cate_buttons.append(btn)
 
-        for i in self.cate:
-            self.setCateBtn(self.left_frame, 'top', i, 15, 3, y=20)
-            pass
+    def cate_event(self, category):
+        self.cate_var.set(category)
+        self.setMenu(category)
 
-        # 결제요청, 장바구니, 주문목록 버튼 배치
-        self.menu_delui_bt = self.setButton(self.right_bottom_frame, 'right', '메뉴 삭제', 15, 3, x=10, y=10)
-        self.menu_adjui_bt =  self.setButton(self.right_bottom_frame, 'right', '메뉴 수정', 15, 3, x=10, y=10)
-        self.menu_addui_bt = self.setButton(self.right_bottom_frame, 'right', '메뉴 등록', 15, 3, x=10, y=10)
+    def setMenu(self, category='1.메인메뉴'):
+        # 메뉴 표시 영역 초기화
+        for widget in self.right_top_frame.winfo_children():
+            widget.destroy()
 
-        # 버튼별 함수 지정
-        self.menu_addui_bt.config(command=self.menu_addui_event)
-        self.menu_adjui_bt.config(command=self.menu_adjui_event)
-        self.menu_delui_bt.config(command=self.menu_delui_event)
+        # 해당 카테고리 메뉴만 추출
+        menu = sorted([info for info in self.Menu_list if info[0] == category], key=lambda x: x[1])
 
-    # 라벨 생성
-    def setlabel(self, frame, pos, txt, wid, hei, anc=None, t_font=("맑은고딕", 20), img = None):             # 라벨 생성 함수
-        label = Label(frame, text = txt, width=wid, height=hei, font=t_font)    #, relief='solid', bd=1
-        if img != None:
-            set_img = Image.open(img).resize((220,150))
-            img_adr = ImageTk.PhotoImage(set_img)
-            label.config(image=img_adr)
-            label.image = img_adr
+        # 스크롤 가능한 캔버스
+        canvas = Canvas(self.right_top_frame, bg="#ffffff")
+        scrollbar = Scrollbar(self.right_top_frame, orient="vertical", command=canvas.yview)
+        scrollable_frame = Frame(canvas, bg="#ffffff")
 
-        if anc != None:
-            label.config(anchor=anc)
-        
-        label.pack(side = pos, fill = 'x')
-
-        return label
-        
-    # pcak로 생성하는 프레임
-    def setFrame_pack(self, frame, pos, wid, hei):             # 프레임 생성 함수
-        frame = Frame(frame, width = wid, height=hei, relief="solid", bd = 0.5)    #, background="#C1FFD4"
-        frame.pack(side = pos)
-        frame.pack_propagate(False)
-        frame.grid_propagate(False)
-        return frame    
-
-    # grid로 생성하는 프레임
-    def setFrame_grid(self, frame, wid, hei, row, col):
-        frame = Frame(frame, width = wid, height = hei, relief="solid", bd = 0.5)   # , background="#C1FFD4"
-        frame.grid(row = row, column= col, padx = 10, pady = 10)
-        frame.pack_propagate(False)
-        return frame
-
-    # 버튼 생성 함수
-    def setButton(self, frame, pos, txt, wid, hei, anc=None, x=10, y=3):            # 버튼 생성 함수
-        button = Button(frame, text=txt, width=wid, height=hei, relief='solid', bd=0.5)
-        if anc != None:
-            button.config(anchor=anc)
-        button.pack(side=pos, padx = x, pady = y)
-        return button
-    
-
-    # 카테고리 버튼 생성 함수
-    def setCateBtn(self, frame, pos, txt, wid, hei, x=10, y=3):            # 버튼 생성 함수
-        cate_bt = Button(frame, text=txt.split('.')[1], width=wid, height=hei, command = lambda b = txt : self.cate_event(b))   # 카테고리별 번호는 텍스트에서 제외
-        cate_bt.pack(side=pos, padx = x, pady = y)
-
-        return cate_bt
-    
-    # 카테고리 버튼 이벤트  카테고리별 이름을 가져와서 메뉴를 출력할 예정
-    def cate_event(self, txt):
-        self.setMenu(txt)
-        pass
-
-    # 메뉴 등록 버튼 이벤트
-    def menu_addui_event(self):
-        print("메뉴 등록 버튼을 눌렀습니다.")
-        menu_addui = Menu_add(self.Menu_list)
-
-        
-    
-    # 메뉴 수정 버튼 이벤트
-    def menu_adjui_event(self):
-        # print("메뉴 수정 버튼을 눌렀습니다.")
-        menu_adjui = Menu_adj_main()
-
-    # 메뉴 삭제 버튼 이벤트
-    def menu_delui_event(self):
-        print("메뉴 삭제 버튼을 눌렀습니다.")    
-        menu_delui = Menu_del()
-
-
-        
-
-
-    # 세로 스크롤 가능한 프레임을 설정하는 함수 (GPT & 제미나이 사용)
-    def y_scrollable_frame(self):
-        # 캔버스와 스크롤바를 담을 컨테이너 프레임을 right_top_frame 내부에 생성합니다.
-        # right_top_frame은 pack으로 관리되므로, 이 컨테이너도 pack으로 배치합니다.
-        canvas_scrollbar_container = Frame(self.right_top_frame)
-        canvas_scrollbar_container.pack(fill="both", expand=True)
-        # canvas_scrollbar_container.pack_propagate(False)
-
-        # 캔버스 생성 (부모를 canvas_scrollbar_container로 변경)
-        canvas = Canvas(canvas_scrollbar_container, bg="white")
-
-        # 스크롤바 생성 (부모를 canvas_scrollbar_container로 변경)
-        scrollbar = Scrollbar(canvas_scrollbar_container, orient="vertical", command=canvas.yview)
-
-        # 캔버스와 스크롤바를 canvas_scrollbar_container 내에서 pack으로 배치합니다.
-        # 스크롤바를 먼저 배치하여 오른쪽에 고정하고, 캔버스가 남은 공간을 채우도록 합니다.
-        scrollbar.pack(side="right", fill="y")
-        canvas.pack(side="left", fill="both", expand=True)
-
-        # 캔버스와 스크롤바 연결
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(
+                scrollregion=canvas.bbox("all")
+            )
+        )
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
 
-        # 스크롤 가능한 내부 프레임 (이 프레임은 캔버스에 의해 관리됩니다 - create_window)
-        # 이 프레임 내에서는 grid를 자유롭게 사용할 수 있습니다.
-        scrollable_frame = Frame(canvas)
+        canvas.pack(side=LEFT, fill=BOTH, expand=True)
+        scrollbar.pack(side=RIGHT, fill=Y)
 
-        # 캔버스 안에 윈도우(scrollable_frame) 생성
-        # window=scrollable_frame: 캔버스에 표시할 위젯
-        # anchor='nw': 위젯의 북서쪽(north-west) 모서리가 캔버스 좌표 (0,0)에 고정되도록 합니다.
-        canvas_window_id = canvas.create_window((0, 0), window=scrollable_frame, anchor='nw')
+        # 메뉴 아이템 표시 (4열 그리드)
+        for i, m in enumerate(menu):
+            frame = Frame(scrollable_frame, bd=2, relief="groove", width=250, height=250)
+            frame.grid(row=i // 4, column=i % 4, padx=10, pady=10)
+            frame.grid_propagate(False)
 
-        # 스크롤 영역 설정 및 프레임 크기 조절 시 캔버스 너비 조정
-        def on_frame_configure(event):
-            # 스크롤 영역을 scrollable_frame의 전체 크기로 설정합니다.
-            canvas.configure(scrollregion=canvas.bbox("all"))
-            # 캔버스 너비를 스크롤 가능한 프레임의 너비와 일치시키기
-            # 이렇게 하면 스크롤 가능한 프레임이 캔버스 너비에 맞춰지고 가로 스크롤바가 생기지 않습니다.
-            canvas.itemconfig(canvas_window_id, width=canvas.winfo_width())
+            # 이미지 표시
+            try:
+                img = Image.open(m[4])
+            except Exception:
+                img = Image.open("기본이미지.jpg")
+            img = img.resize((220, 150))
+            img_tk = ImageTk.PhotoImage(img)
+            label_img = Label(frame, image=img_tk)
+            label_img.image = img_tk
+            label_img.pack(pady=5)
 
-        # scrollable_frame의 크기가 변경될 때마다 on_frame_configure 함수를 호출합니다.
-        scrollable_frame.bind("<Configure>", on_frame_configure)
-        # 캔버스 크기가 변경될 때도 on_frame_configure를 호출하여 scrollable_frame의 너비를 조정합니다.
-        canvas.bind("<Configure>", on_frame_configure)
+            # 메뉴명, 가격, 설명
+            Label(frame, text=m[1], font=("맑은 고딕", 14, "bold")).pack()
+            Label(frame, text=f"{m[2]}원", font=("맑은 고딕", 12)).pack()
+            Label(frame, text=m[3], font=("맑은 고딕", 10), wraplength=200, justify=LEFT).pack()
 
-        def on_mousewheel(event):
-            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            # 수정 버튼
+            btn = Button(frame, text="수정", command=lambda menu=m: self.menu_adj_event(menu))
+            btn.pack(pady=5)
 
-        # 마우스 휠 스크롤 기능 추가 (전역 바인딩)
-        canvas.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", on_mousewheel))
-        canvas.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
-
-        # setMenu에서 사용할 수 있도록 scrollable_frame을 반환합니다.
-        return scrollable_frame
-
-
+    def menu_adj_event(self, menu):
+        # parent_window로 self.window 전달
+        menu_adj = Menu_adj(self.Menu_list, menu, parent_window=self.window)
+        self.window.wait_window(menu_adj.window)
 
 if __name__ == "__main__":
-    mainui = Administer_main()
-
-
-
-
-'''
-1. 카테고리 버튼에 대한 변수가 필요없어진 상황
-2. DB에서 메뉴 정보를 불러오기   - 구현 o
-3. 결제 요청되었습니다. 메시지 출력하기 - 구현 o
-4. 장바구니, 주문목록 화면 출력하기 (지훈 님이랑 형우 님이 완료하면 import시켜서 열기만 하면 됨)
-5. 불러온 데이터로 메뉴 화면 띄우는거, 테이블 번호 레이블 바꾸는 거 하기.  - 테이블 번호는 구현안해도 되지 않나?
-'''
+    Administer_main()
