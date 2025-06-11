@@ -1,7 +1,6 @@
 # User_Order_Rist_boundary.py
 
 import tkinter as tk
-from tkinter import ttk
 from tkinter import messagebox
 import mysql.connector
 from PIL import Image, ImageTk
@@ -15,9 +14,9 @@ class UserOrderRist:
     def fetch_orders_by_table(self):
         conn = mysql.connector.connect(
             host="localhost",
-            user="soft",
+            user="root",
             password="0000",
-            database=""
+            database="sys"
         )
         cursor = conn.cursor(dictionary=True)
 
@@ -42,27 +41,27 @@ class UserOrderRist:
         except:
             photo = None
 
-    photo_frame = tk.Frame(frame, width=100, height=100, bg="lightgray")
-    photo_frame.pack(side="left")
-    photo_frame.pack_propagate(False)
+        photo_frame = tk.Frame(frame, width=100, height=100, bg="lightgray")
+        photo_frame.pack(side="left")
+        photo_frame.pack_propagate(False)
 
-    if photo:
-        label_img = tk.Label(photo_frame, image=photo)
-        label_img.image = photo  # prevent garbage collection
-        label_img.pack()
-    else:
-        tk.Label(photo_frame, text="이미지 없음").pack()
+        if photo:
+            label_img = tk.Label(photo_frame, image=photo)
+            label_img.image = photo
+            label_img.pack()
+        else:
+            tk.Label(photo_frame, text="이미지 없음").pack()
 
-    info_frame = tk.Frame(frame)
-    info_frame.pack(side="left", padx=15, fill="x", expand=True)
+        info_frame = tk.Frame(frame)
+        info_frame.pack(side="left", padx=15, fill="x", expand=True)
 
-    tk.Label(info_frame, text=name, font=("Arial", 14, "bold")).pack(anchor="w")
-    tk.Label(info_frame, text=option, font=("Arial", 11)).pack(anchor="w")
+        tk.Label(info_frame, text=name, font=("Arial", 14, "bold")).pack(anchor="w")
+        tk.Label(info_frame, text=option, font=("Arial", 11)).pack(anchor="w")
 
-    bottom_frame = tk.Frame(frame)
-    bottom_frame.pack(fill="x", pady=5)
-    tk.Label(bottom_frame, text=qty).pack(side="left")
-    tk.Label(bottom_frame, text=price).pack(side="right")
+        bottom_frame = tk.Frame(frame)
+        bottom_frame.pack(fill="x", pady=5)
+        tk.Label(bottom_frame, text=qty).pack(side="left")
+        tk.Label(bottom_frame, text=price).pack(side="right")
 
     def run(self):
         self.root = tk.Toplevel()
