@@ -30,8 +30,9 @@ class PlaceholderEntry(Entry):
             self['fg'] = self.placeholder_color
 
 class Menu_adj:
-    def __init__(self, menu_list, menu,parent_window=None):
-        # print(menu)
+    def __init__(self, menu_list, menu, parent_window=None):
+        # ('1.메인메뉴', '양꼬치', '기본이미지.jpg', 1500, '맛있는 양꼬지', 0)
+        # print(menu[2])    # image
         self.menu_data = {
             'category':  menu[0],
             'menu':  menu[1],
@@ -39,7 +40,8 @@ class Menu_adj:
             'description':  menu[4],
             'image': menu[2]
         }
-        
+        self.parent_window = parent_window
+
         self.req_opt = []
         self.add_opt = []
         self.menu_list = menu_list

@@ -271,6 +271,7 @@ class Choiced_menu_boundary:
             self.cmc = Choiced_Menu_control(self.user_main)
             self.cmc.add_cart(self.menu_info)
             self.Choiced_menu_window.destroy()
+            messagebox.showinfo("장바구니 등록성공", "장바구니에 추가되었습니다.")
 
         else:   # 필수옵션이 있는 경우 선택안하면 장바구니에 안담기게
             if self.selected_required_option_name == None:
@@ -283,6 +284,7 @@ class Choiced_menu_boundary:
                 self.cmc = Choiced_Menu_control(self.user_main)
                 self.cmc.add_cart(self.menu_info)
                 self.Choiced_menu_window.destroy()
+                messagebox.showinfo("장바구니 등록성공", "장바구니에 추가되었습니다.")
         
 
 # 프로그램 시작
