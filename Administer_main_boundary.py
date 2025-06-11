@@ -1,15 +1,18 @@
 from tkinter import *
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
-from Menu_adj_control import Menu_adj_control
-from Menu_adj_boundary import Menu_adj
-
+# from Menu_adj_control import Menu_adj_control
+# from Menu_adj_boundary import Menu_adj
+from getMenu import *
+from Menu_adj_main_boundary import *
+from Menu_del_boundary import *
+from Menu_add_boundary import *
 class Administer_main:
     def __init__(self):
         self.window = Tk()
         self.window.title("관리자 메인")
         self.window.geometry("1200x800+100+100")
-        self.data = Menu_adj_control()
+        self.data = getMenu()
         self.Menu_list = self.data.getMenu()
         self.ShowUi()
         self.window.mainloop()
