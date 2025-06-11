@@ -30,7 +30,7 @@ class PlaceholderEntry(Entry):
             self['fg'] = self.placeholder_color
 
 class Menu_adj:
-    def __init__(self, menu_list, menu):
+    def __init__(self, menu_list, menu,parent_window=None):
         # print(menu)
         self.menu_data = {
             'category':  menu[0],
@@ -260,15 +260,13 @@ class Menu_adj:
             return
         
 
-        # 메뉴 등록 컨트롤러 호출
-        # print(self.menu_data)
         result_menu = self.adj_control.menu_adj(self.menu_data, self.menu[1])
         result_opt = self.adj_control.Option_adj(self.menu_data, self.req_opt, self.add_opt)
-
-        # 결과 메시지 출력
         res = messagebox.showinfo(f"메뉴 등록 결과 {result_menu}\n옵션 등록 결과{result_opt}")
+        # 바뀐 부분 ② : 등록 완료 시 메인 창도 자동 종료
+        if self.parent_window is not None:
+            self.parent_window.destroy()
         self.menu_add_window.destroy()
-
 
 
     def quit(self):
