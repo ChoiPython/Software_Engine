@@ -40,11 +40,14 @@ class Choiced_menu_boundary:
                 # {"name": "필수 옵션 B", "price": 1000},
                 # {"name": "필수 옵션 C", "price": 1500},
                 # {"name": "필수 옵션 D", "price": 2000},
+        
+        print("test: ",self.menu[4])
             
         self.menu_data = {
             "base_price": self.menu[3],
             "menu_name": self.menu[1],
             "image_path": self.menu[2],   # 이미지 경로
+            "menu_description": self.menu[4], #메뉴 설명
             "required_options": [{'name': req_opt[1], 'price': req_opt[2]} for req_opt in self.req_opt],
             "additional_options": [{'name': add_opt[1], 'price': add_opt[2]} for add_opt in self.add_opt]
         }
@@ -98,6 +101,9 @@ class Choiced_menu_boundary:
         # 메뉴명 표시
         menu_name = self.menu_data.get("menu_name", "메뉴명")
         Label(self.left_frame, text=menu_name, font=("Arial", 12, "bold")).pack(pady=5)
+        # 메뉴 설명 표시
+        menu_description = self.menu_data.get("menu_description", "")
+        Label(self.left_frame, text=menu_description, font=("Arial", 10), relief="groove", width=20).pack(pady=5)
 
         # 수량 조절 버튼 +, -
         qty_frame = Frame(self.left_frame)

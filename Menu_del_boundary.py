@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 from getMenu import *
 from Menu_del_control import *
+from tkinter import messagebox
 
 class Menu_del:
     
@@ -117,15 +118,24 @@ class Menu_del:
 
     # 메뉴 삭제 버튼 이벤트
     def menu_del_event(self, menu): # 컨트롤 클래스로 구현하기  - 데이터는 삭제됨 / UI에서는 아직 삭제 안됨.
-        delete = Menu_del_control()
-        delete.menu_del(menu[1])
-        delete.option_del(menu[1])
-        print(f"{menu[1]} 메뉴 삭제")       # menu[1]: 메뉴이름
-        self.setMenu(category=menu[0])      # menu[0]: 카테고리
+        yesorno = messagebox.askokcancel("메뉴삭제", "메뉴를 삭제하시겠습니까?")
+        if yesorno == 1:    # 삭제
+            delete = Menu_del_control()
+            delete.menu_del(menu[1])
+            delete.option_del(menu[1])
+            print(f"{menu[1]} 메뉴 삭제")       # menu[1]: 메뉴이름
+            self.setMenu(category=menu[0])      # menu[0]: 카테고리
+        
+        else:   # 삭제 x
+            print("삭제x")
+            self.menu_del_window.grab_set()
+            pass
+
+
 
     # 닫기 버튼 이벤트
     def colose_event(self):     # 닫기 기능 정상 작동
-        print("닫기")
+
         self.menu_del_window.destroy()
         pass
 
