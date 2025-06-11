@@ -14,9 +14,9 @@ class UserOrderRist:
     def fetch_orders_by_table(self):
         conn = mysql.connector.connect(
             host="localhost",
-            user="root",
+            user="soft",
             password="0000",
-            database="sys"
+            database=""
         )
         cursor = conn.cursor(dictionary=True)
 
