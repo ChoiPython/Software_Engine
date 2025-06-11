@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 from getMenu import *
 from Menu_adj_boundary import *
 
-class Menu_adj:
+class Menu_adj_main:
     
     def __init__(self):
         self.data = getMenu()               
@@ -118,7 +118,7 @@ class Menu_adj:
     # 메뉴 수정 버튼 이벤트
     def menu_adj_event(self, menu): # 컨트롤 클래스로 구현하기  - 데이터는 삭제됨 / UI에서는 아직 삭제 안됨.
         print(menu) 
-        menu_adj = MenuForm(self.Menu_list, menu)
+        menu_adj = Menu_adj(self.Menu_list, menu)
         # menu: ('1.메인메뉴', '닭꼬지', 'test.jpg', 1300, None, 0) 선택한 메뉴 데이터 전부 가져옵니다!
 
 

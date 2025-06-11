@@ -13,13 +13,13 @@ class Choiced_Menu_control:
             idx = 0
             check = 0   
             # print(self.user_main.cart)
-            for cmp in self.user_main.cart:
+            for cart in self.user_main.cart:
                 # print(f"선택한 메뉴정보: {menu_info[:4]}")
                 # print(f"기존 메뉴정보: {cmp[:4]}")
                 # 메뉴 명이 같고                필수 옵션이 같고
-                if menu_info[0] == cmp[0] and menu_info[2] == cmp[2]:
+                if menu_info[0] == cart[0] and menu_info[2] == cart[2]:
                     # 정렬된 추가옵션이 같으면
-                    if sorted(menu_info[3]) == sorted(cmp[3]):
+                    if sorted(menu_info[3]) == sorted(cart[3]):
                         # 수량만 증가
                         self.user_main.cart[idx][4] += menu_info[4]
                         check= 1
@@ -27,7 +27,7 @@ class Choiced_Menu_control:
 
                 idx+=1
 
-            if check == 0:
+            if check == 0:  # 새로 추가
                 print("menu_info: ",menu_info)
                 self.user_main.cart.append(menu_info)
                     
