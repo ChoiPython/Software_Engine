@@ -25,6 +25,20 @@ class Menu_del_control:
         self.cursor.close()
         self.conn.close()
 
+    def option_del(self, menu):
+        self.conn = pymysql.connect(host='localhost', user = 'soft', password='0000', db='Table_Order')
+
+        self.cursor = self.conn.cursor()      # 데이터 조작할 커서 생성
+
+        # 데이터 - 삽입, 수정, 삭제에 사용됨
+        self.delete_query = f"delete from `option` where menu='{menu}'"    # 전체 데이터 가져오는 쿼리문
+        self.cursor.execute(self.delete_query)   # 쿼리 입력
+
+        self.conn.commit()       # 입력한 데이터 저장하기(데이터 삽입, 수정, 삭제에 사용됨.)
+
+        self.cursor.close()
+        self.conn.close()
+
 
 
 if __name__ == "__main__":

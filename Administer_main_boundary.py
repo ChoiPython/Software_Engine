@@ -124,10 +124,6 @@ class Administer_main:
     def cate_event(self, txt):
         self.setMenu(txt)
         pass
-        
-    # 담기 버튼 이벤트
-    def add_cart_event(self):
-        print("장바구니에 담기")
 
     # 메뉴 등록 버튼 이벤트
     def menu_addui_event(self):
@@ -138,7 +134,7 @@ class Administer_main:
     
     # 메뉴 수정 버튼 이벤트
     def menu_adjui_event(self):
-        print("메뉴 수정 버튼을 눌렀습니다.")
+        # print("메뉴 수정 버튼을 눌렀습니다.")
         menu_adjui = Menu_adj_main()
 
     # 메뉴 삭제 버튼 이벤트

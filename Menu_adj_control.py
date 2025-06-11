@@ -23,8 +23,8 @@ class Menu_adj_control:
         # ['한식', '돈까스', 10000, '바삭한 돼지고기 돈까스', 'C:/Users/wndud/Desktop/25-1학기/소프트웨어공학/5. 구현/기본이미지.jpg']
         self.menu_data = [val for k, val in new_menu.items() ]
         self.menu_data[4] = self.menu_data[4].split("/")[-1]    # 경로빼고 이미지 이름만
-        print(self.menu_data)
-        print(bf_menu)
+        # print(self.menu_data)
+        # print(bf_menu)
         # # 데이터 - 삽입, 수정, 삭제에 사용됨
         self.update_query = f"update menu set category = '{self.menu_data[0]}', menu ='{self.menu_data[1]}', image='{self.menu_data[4]}', price={self.menu_data[2]}, menu_desc = '{self.menu_data[3]}', soldout='0' where menu = '{bf_menu}'"    # 전체 데이터 가져오는 쿼리문
         self.cursor.execute(self.update_query)   # 쿼리 입력
@@ -44,32 +44,25 @@ class Menu_adj_control:
         print("req_opt", req_opt)
         print("add_opt", add_opt)
 
-        self.select_query = f"select * from `option` where menu='{self.menu_data[1]}'"    # 전체 데이터 가져오는 쿼리문
-        self.cursor.execute(self.select_query)   # 쿼리 입력
-        self.result = self.cursor.fetchall()  # 명령어 결과 튜플로 반환
-    
-        # # 데이터 - 삽입, 수정, 삭제에 사용됨
-
-        print(type(menu), type(req_opt), type(add_opt))
-        for i in range(len(req_opt)):   # 필수 옵션 저장
-            # print(self.menu_data[1] in self.result[0] and req_opt[i][0] in self.result[1] and self.result[i][-1] == 1)
-            if self.menu_data[1] in self.result[0] and req_opt[i][0] in self.result[1] and self.result[i][-1] == 1:   # 이미 등록되어 있기 때문에 등록 x
-                pass
-
-            else:
-                self.insert_query = f"insert into `option` values('{self.menu_data[1]}', '{req_opt[i][0]}', '{req_opt[i][1]}', '1')"    # 전체 데이터 가져오는 쿼리문
+        try:
+            for req in req_opt:   # 필수 옵션 저장
+                self.insert_query = f"insert into `option` values('{self.menu_data[1]}', '{req[0]}', '{req[1]}', '1')"    # 전체 데이터 가져오는 쿼리문
                 self.cursor.execute(self.insert_query)   # 쿼리 입력
-                self.conn.commit()       # 입력한 데이터 저장하기(데이터 삽입, 수정, 삭제에 사용됨.)
-
-        for i in range(len(add_opt)):   # 추가 옵션 저장
-            if self.menu_data[1] in self.result[0] and add_opt[i][0] in self.result[1] and self.result[i][-1] == 1:   # 이미 등록되어 있기 때문에 등록 x
-                pass
-
-            else:
-                self.insert_query = f"insert into `option` values('{self.menu_data[1]}',  '{add_opt[0]}', '{add_opt[1]}', '0')"    # 전체 데이터 가져오는 쿼리문
+                self.conn.commit()
+                print(self.insert_query)
+                
+            for add in add_opt:   # 추가 옵션 저장
+                self.insert_query = f"insert into `option` values('{self.menu_data[1]}', '{add[0]}', '{add[1]}', '1')"    # 전체 데이터 가져오는 쿼리문
                 self.cursor.execute(self.insert_query)   # 쿼리 입력
-                self.conn.commit()       # 입력한 데이터 저장하기(데이터 삽입, 수정, 삭제에 사용됨.)
+                self.conn.commit
 
+                return "옵션 등록 완료"
+        
+        except Exception as e:
+            return "옵션 등록 실패"
+
+
+  # 입력한 데이터 저장하기(데이터 삽입, 수정, 삭제에 사용됨.)
 if __name__ == "__main__":
     delete_menu = Menu_adj_control()
     menu = {'category': '1.메인메뉴', 
