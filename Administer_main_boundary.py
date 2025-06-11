@@ -124,22 +124,18 @@ class Administer_main:
     def cate_event(self, txt):
         self.setMenu(txt)
         pass
-        
-    # 담기 버튼 이벤트
-    def add_cart_event(self):
-        print("장바구니에 담기")
 
     # 메뉴 등록 버튼 이벤트
     def menu_addui_event(self):
         print("메뉴 등록 버튼을 눌렀습니다.")
-        menu_addui = MenuForm(self.Menu_list)
+        menu_addui = Menu_add(self.Menu_list)
 
         
     
     # 메뉴 수정 버튼 이벤트
     def menu_adjui_event(self):
-        print("메뉴 수정 버튼을 눌렀습니다.")
-        menu_adjui = Menu_adj()
+        # print("메뉴 수정 버튼을 눌렀습니다.")
+        menu_adjui = Menu_adj_main(parent_window=self.admin_main_window)
 
     # 메뉴 삭제 버튼 이벤트
     def menu_delui_event(self):
@@ -218,4 +214,4 @@ if __name__ == "__main__":
 3. 결제 요청되었습니다. 메시지 출력하기 - 구현 o
 4. 장바구니, 주문목록 화면 출력하기 (지훈 님이랑 형우 님이 완료하면 import시켜서 열기만 하면 됨)
 5. 불러온 데이터로 메뉴 화면 띄우는거, 테이블 번호 레이블 바꾸는 거 하기.  - 테이블 번호는 구현안해도 되지 않나?
-'''
+'''	

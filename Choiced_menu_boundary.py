@@ -40,11 +40,14 @@ class Choiced_menu_boundary:
                 # {"name": "필수 옵션 B", "price": 1000},
                 # {"name": "필수 옵션 C", "price": 1500},
                 # {"name": "필수 옵션 D", "price": 2000},
+        
+        print("test: ",self.menu[4])
             
         self.menu_data = {
             "base_price": self.menu[3],
             "menu_name": self.menu[1],
             "image_path": self.menu[2],   # 이미지 경로
+            "menu_description": self.menu[4], #메뉴 설명
             "required_options": [{'name': req_opt[1], 'price': req_opt[2]} for req_opt in self.req_opt],
             "additional_options": [{'name': add_opt[1], 'price': add_opt[2]} for add_opt in self.add_opt]
         }
@@ -98,6 +101,9 @@ class Choiced_menu_boundary:
         # 메뉴명 표시
         menu_name = self.menu_data.get("menu_name", "메뉴명")
         Label(self.left_frame, text=menu_name, font=("Arial", 12, "bold")).pack(pady=5)
+        # 메뉴 설명 표시
+        menu_description = self.menu_data.get("menu_description", "")
+        Label(self.left_frame, text=menu_description, font=("Arial", 10), relief="groove", width=20).pack(pady=5)
 
         # 수량 조절 버튼 +, -
         qty_frame = Frame(self.left_frame)
@@ -176,7 +182,7 @@ class Choiced_menu_boundary:
 
     def showBottomButtons(self):
         # 하단 버튼: 닫기, 장바구니 담기
-        Button(self.right_bottom_frame, text="닫기", width=15, command=self.close_window).pack(side="left", padx=20, pady=20)
+        Button(self.right_bottom_frame, text="닫기", width=15, command=self.close_event).pack(side="left", padx=20, pady=20)
         Button(self.right_bottom_frame, text="장바구니 담기", width=15, command=self.add_to_cart).pack(side="left", padx=20, pady=20)
 
     def select_required_option(self, name, price):
@@ -248,7 +254,7 @@ class Choiced_menu_boundary:
             self.qty_label.config(text=str(self.quantity))
             self.update_total()
 
-    def close_window(self):
+    def close_event(self):
         self.Choiced_menu_window.destroy()
 
     def add_to_cart(self):
@@ -265,6 +271,7 @@ class Choiced_menu_boundary:
             self.cmc = Choiced_Menu_control(self.user_main)
             self.cmc.add_cart(self.menu_info)
             self.Choiced_menu_window.destroy()
+            messagebox.showinfo("장바구니 등록성공", "장바구니에 추가되었습니다.")
 
         else:   # 필수옵션이 있는 경우 선택안하면 장바구니에 안담기게
             if self.selected_required_option_name == None:
@@ -277,6 +284,7 @@ class Choiced_menu_boundary:
                 self.cmc = Choiced_Menu_control(self.user_main)
                 self.cmc.add_cart(self.menu_info)
                 self.Choiced_menu_window.destroy()
+                messagebox.showinfo("장바구니 등록성공", "장바구니에 추가되었습니다.")
         
 
 # 프로그램 시작
