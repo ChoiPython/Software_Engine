@@ -15,9 +15,8 @@ class OrderControl:
         try:
             print(cart_data)
             for item in cart_data:
-                table_num = item['table_num']
                 menu_name = item['menu_name']
-                image = item['image']
+                image = item['image_path']
                 quantity = item['quantity']
                 option = item['option']
                 if isinstance(option, list):
