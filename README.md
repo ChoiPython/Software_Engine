@@ -27,16 +27,16 @@
 ## 🏗️ Architecture — BCE Pattern
 
 ```
-boundary/                         control/
+Boundary (화면/UI)                Control (비즈니스 로직·DB 접근)
 ─────────────────────            ─────────────────────
-user_main_boundary           ──▶  get_menu_control
-choiced_menu_boundary        ──▶  choiced_menu_control
-cart_boundary                 ──▶  order_control
-menu_add_boundary             ──▶  menu_add_control
-menu_adj_boundary/main        ──▶  menu_adj_control
-menu_del_boundary             ──▶  menu_del_control
-administer_main_boundary
-user_order_rist_boundary
+User_main_boundary          ──▶  getMenu_control
+Choiced_menu_boundary       ──▶  Choiced_Menu_control
+Cart_boundary                ──▶  Order_control
+Menu_add_boundary            ──▶  Menu_add_control
+Menu_adj_boundary/main       ──▶  Menu_adj_control
+Menu_del_boundary            ──▶  Menu_del_control
+Administer_main_boundary
+User_Order_Rist_boundary
 ```
 
 - **Boundary**: 사용자가 직접 보고 조작하는 화면(Tkinter 위젯 구성, 버튼 이벤트)
@@ -60,73 +60,39 @@ user_order_rist_boundary
 
 팀 프로젝트 전체 217커밋 중 **72커밋으로 최다 기여**했으며, 아래 영역을 주로 담당했습니다.
 
-- `boundary/user_main_boundary.py` — 고객용 메인 화면(카테고리 탐색, 메뉴 렌더링, 장바구니 진입점) 설계 및 구현
-- `boundary/cart_boundary.py` — 장바구니 UI 및 항목별 수량/옵션 관리
-- `boundary/administer_main_boundary.py` — 관리자 메인 화면 구성
-- `boundary/menu_del_boundary.py` / `control/menu_del_control.py` — 메뉴 삭제 기능 (Boundary + Control 양쪽 구현)
-- `boundary/menu_adj_main_boundary.py`, `boundary/choiced_menu_boundary.py` — 메뉴 옵션 선택 및 조정 화면
+- `User_main_boundary.py` — 고객용 메인 화면(카테고리 탐색, 메뉴 렌더링, 장바구니 진입점) 설계 및 구현
+- `Cart_boundary.py` — 장바구니 UI 및 항목별 수량/옵션 관리
+- `Administer_main_boundary.py` — 관리자 메인 화면 구성
+- `Menu_del_boundary.py` / `Menu_del_control.py` — 메뉴 삭제 기능 (Boundary + Control 양쪽 구현)
+- `Menu_adj_main_boundary.py`, `Choiced_menu_boundary.py` — 메뉴 옵션 선택 및 조정 화면
 
 ## ▶️ 실행 방법
 
 ```bash
-# 0) 패키지 설치 — python main.py를 실행할 인터프리터에 직접 설치해야 함
-#    (PC에 파이썬이 여러 개 설치되어 있으면 pip와 python이 서로 다른
-#     인터프리터를 가리킬 수 있음. `python -m pip`로 실행하면 항상 일치)
-python -m pip install -r requirements.txt
+pip install pymysql mysql-connector-python pillow
 
-# 1) MySQL 서버 실행 후, 데모용 DB/테이블/샘플 데이터 생성
-#    'soft' 계정이 아직 없다면 먼저 (root 권한으로) 아래 한 줄 실행
-mysql -u root -p < sql/create_user.sql
+# MySQL에 menu / option / order_list 테이블 스키마 구성 필요 (DB명: Table_Order)
 
-#    DB/테이블/샘플 데이터 생성 (soft 계정으로 실행, 위에서 만든 계정 사용)
-mysql -u soft -p0000 < schema.sql
-
-# 2) 실행
 python main.py
 ```
-
-> **PowerShell 사용 시 주의**: PowerShell은 `<` 파일 리다이렉션을 지원하지 않고(`RedirectionNotSupported` 오류 발생), `Get-Content | mysql`로 대체하면 한글이 깨져서 들어갈 수 있습니다. PowerShell/cmd에서는 위 두 `mysql ... < *.sql` 명령을 아래처럼 `cmd /c`로 감싸서 실행하세요.
->
-> ```powershell
-> cmd /c "mysql -u root -p < sql/create_user.sql"
-> cmd /c "mysql -u soft -p0000 < schema.sql"
-> ```
-
-`sql/create_user.sql`은 앱이 기본으로 사용하는 계정(`user=soft`, `password=0000`)과 `Table_Order` 데이터베이스를 생성합니다(이미 계정이 있다면 건너뛰어도 됨). `schema.sql`은 `menu` / `option` / `order_list` 테이블과 데모용 샘플 메뉴 몇 개를 만들어, 실행 후 바로 메뉴 화면이 채워진 상태로 데모를 볼 수 있게 합니다.
 
 ## 📂 Directory Structure
 
 ```
 Software_Engine/
-├── main.py                              # 프로그램 진입점 (User_main 실행)
-├── requirements.txt
-├── schema.sql                           # 데모용 테이블/샘플 데이터 생성 스크립트 (soft 계정으로 실행)
-├── sql/
-│   └── create_user.sql                  # (선택) root 권한으로 soft 계정/DB 최초 생성
-├── assets/                              # 메뉴/기본 이미지 리소스
-│   ├── test.jpg
-│   ├── test2.jpg
-│   └── 기본이미지.jpg
-├── boundary/                            # 화면(UI) 계층
-│   ├── user_main_boundary.py            # 고객 메인 화면
-│   ├── cart_boundary.py                 # 장바구니 화면
-│   ├── choiced_menu_boundary.py         # 메뉴 옵션 선택 화면
-│   ├── administer_main_boundary.py      # 관리자 메인 화면
-│   ├── menu_add_boundary.py             # 메뉴 등록 화면
-│   ├── menu_adj_boundary.py             # 메뉴 수정 화면
-│   ├── menu_adj_main_boundary.py        # 메뉴 수정 목록 화면
-│   ├── menu_del_boundary.py             # 메뉴 삭제 화면
-│   ├── option_add_boundary.py           # 옵션 등록 화면
-│   └── user_order_rist_boundary.py      # 주문 목록 화면
-└── control/                             # 비즈니스 로직 / DB 접근 계층
-    ├── get_menu_control.py              # 메뉴/옵션 조회 (DB)
-    ├── choiced_menu_control.py          # 장바구니 담기 로직
-    ├── menu_add_control.py              # 메뉴 등록 (DB)
-    ├── menu_adj_control.py              # 메뉴 수정 (DB)
-    ├── menu_del_control.py              # 메뉴 삭제 (DB)
-    └── order_control.py                 # 주문 저장 (DB)
+├── main.py                        # 프로그램 진입점 (User_main 실행)
+├── User_main_boundary.py          # 고객 메인 화면
+├── Cart_boundary.py                # 장바구니 화면
+├── Choiced_menu_boundary.py        # 메뉴 옵션 선택 화면
+├── Administer_main_boundary.py     # 관리자 메인 화면
+├── Menu_add_boundary.py / _control.py     # 메뉴 등록
+├── Menu_adj_boundary.py / _main_boundary.py / _control.py  # 메뉴 수정
+├── Menu_del_boundary.py / _control.py     # 메뉴 삭제
+├── User_Order_Rist_boundary.py     # 주문 목록 화면
+├── Order_control.py                # 주문 저장 (DB)
+└── getMenu_control.py              # 메뉴/옵션 조회 (DB)
 ```
 
 ## 📝 Notes
 
-본 프로젝트는 소프트웨어공학 수업의 팀 프로젝트로, 학습 목적의 데모 애플리케이션입니다. DB 접속 정보는 예시 값이며 실제 배포 환경에서는 별도의 환경변수 처리가 필요합니다. 로컬에서 빠르게 데모를 돌려보려면 `schema.sql`을 먼저 실행하세요.
+본 프로젝트는 소프트웨어공학 수업의 팀 프로젝트로, 학습 목적의 데모 애플리케이션입니다. DB 접속 정보는 예시 값이며 실제 배포 환경에서는 별도의 환경변수 처리가 필요합니다.
