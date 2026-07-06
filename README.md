@@ -85,6 +85,13 @@ mysql -u soft -p0000 < schema.sql
 python main.py
 ```
 
+> **PowerShell 사용 시 주의**: PowerShell은 `<` 파일 리다이렉션을 지원하지 않고(`RedirectionNotSupported` 오류 발생), `Get-Content | mysql`로 대체하면 한글이 깨져서 들어갈 수 있습니다. PowerShell/cmd에서는 위 두 `mysql ... < *.sql` 명령을 아래처럼 `cmd /c`로 감싸서 실행하세요.
+>
+> ```powershell
+> cmd /c "mysql -u root -p < sql/create_user.sql"
+> cmd /c "mysql -u soft -p0000 < schema.sql"
+> ```
+
 `sql/create_user.sql`은 앱이 기본으로 사용하는 계정(`user=soft`, `password=0000`)과 `Table_Order` 데이터베이스를 생성합니다(이미 계정이 있다면 건너뛰어도 됨). `schema.sql`은 `menu` / `option` / `order_list` 테이블과 데모용 샘플 메뉴 몇 개를 만들어, 실행 후 바로 메뉴 화면이 채워진 상태로 데모를 볼 수 있게 합니다.
 
 ## 📂 Directory Structure
