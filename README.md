@@ -69,16 +69,23 @@ user_order_rist_boundary
 ## ▶️ 실행 방법
 
 ```bash
-pip install -r requirements.txt
+# 0) 패키지 설치 — python main.py를 실행할 인터프리터에 직접 설치해야 함
+#    (PC에 파이썬이 여러 개 설치되어 있으면 pip와 python이 서로 다른
+#     인터프리터를 가리킬 수 있음. `python -m pip`로 실행하면 항상 일치)
+python -m pip install -r requirements.txt
 
-# 1) MySQL 서버 실행 후, 데모용 DB/계정/테이블/샘플 데이터를 한 번에 생성 (root 권한 필요)
-mysql -u root -p < schema.sql
+# 1) MySQL 서버 실행 후, 데모용 DB/테이블/샘플 데이터 생성
+#    'soft' 계정이 아직 없다면 먼저 (root 권한으로) 아래 한 줄 실행
+mysql -u root -p < sql/create_user.sql
+
+#    DB/테이블/샘플 데이터 생성 (soft 계정으로 실행, 위에서 만든 계정 사용)
+mysql -u soft -p0000 < schema.sql
 
 # 2) 실행
 python main.py
 ```
 
-`schema.sql`은 코드가 기본으로 사용하는 접속 정보(`host=localhost`, `user=soft`, `password=0000`, `db=Table_Order`)에 맞춰 `menu` / `option` / `order_list` 테이블과 데모용 샘플 메뉴 몇 개를 생성합니다. 실행 후 바로 메뉴 화면이 채워진 상태로 데모를 볼 수 있습니다.
+`sql/create_user.sql`은 앱이 기본으로 사용하는 계정(`user=soft`, `password=0000`)과 `Table_Order` 데이터베이스를 생성합니다(이미 계정이 있다면 건너뛰어도 됨). `schema.sql`은 `menu` / `option` / `order_list` 테이블과 데모용 샘플 메뉴 몇 개를 만들어, 실행 후 바로 메뉴 화면이 채워진 상태로 데모를 볼 수 있게 합니다.
 
 ## 📂 Directory Structure
 
@@ -86,7 +93,9 @@ python main.py
 Software_Engine/
 ├── main.py                              # 프로그램 진입점 (User_main 실행)
 ├── requirements.txt
-├── schema.sql                           # 데모용 DB/계정/테이블/샘플 데이터 생성 스크립트
+├── schema.sql                           # 데모용 테이블/샘플 데이터 생성 스크립트 (soft 계정으로 실행)
+├── sql/
+│   └── create_user.sql                  # (선택) root 권한으로 soft 계정/DB 최초 생성
 ├── assets/                              # 메뉴/기본 이미지 리소스
 │   ├── test.jpg
 │   ├── test2.jpg

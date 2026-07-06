@@ -1,15 +1,12 @@
--- Table_Order 데모 DB 초기화 스크립트
--- 사용법 (관리자/root 계정으로 1회 실행):
---   mysql -u root -p < schema.sql
+-- Table_Order 데모 DB/테이블/샘플 데이터 초기화 스크립트
+-- 사용법:
+--   mysql -u soft -p0000 < schema.sql
 --
+-- 'soft' 계정이 아직 없다면 먼저 (root 권한으로) sql/create_user.sql을 실행하세요.
 -- boundary/control 코드가 공통으로 사용하는 접속 정보(host=localhost, user=soft,
--- password=0000, db=Table_Order)에 맞춰 계정과 스키마를 생성합니다.
+-- password=0000, db=Table_Order)에 맞춘 스키마입니다.
 
 CREATE DATABASE IF NOT EXISTS Table_Order DEFAULT CHARACTER SET utf8mb4;
-
-CREATE USER IF NOT EXISTS 'soft'@'localhost' IDENTIFIED BY '0000';
-GRANT ALL PRIVILEGES ON Table_Order.* TO 'soft'@'localhost';
-FLUSH PRIVILEGES;
 
 USE Table_Order;
 SET NAMES utf8mb4;
