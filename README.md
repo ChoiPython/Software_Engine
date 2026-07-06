@@ -71,10 +71,14 @@ user_order_rist_boundary
 ```bash
 pip install -r requirements.txt
 
-# MySQL에 menu / option / order_list 테이블 스키마 구성 필요 (DB명: Table_Order)
+# 1) MySQL 서버 실행 후, 데모용 DB/계정/테이블/샘플 데이터를 한 번에 생성 (root 권한 필요)
+mysql -u root -p < schema.sql
 
+# 2) 실행
 python main.py
 ```
+
+`schema.sql`은 코드가 기본으로 사용하는 접속 정보(`host=localhost`, `user=soft`, `password=0000`, `db=Table_Order`)에 맞춰 `menu` / `option` / `order_list` 테이블과 데모용 샘플 메뉴 몇 개를 생성합니다. 실행 후 바로 메뉴 화면이 채워진 상태로 데모를 볼 수 있습니다.
 
 ## 📂 Directory Structure
 
@@ -82,6 +86,7 @@ python main.py
 Software_Engine/
 ├── main.py                              # 프로그램 진입점 (User_main 실행)
 ├── requirements.txt
+├── schema.sql                           # 데모용 DB/계정/테이블/샘플 데이터 생성 스크립트
 ├── assets/                              # 메뉴/기본 이미지 리소스
 │   ├── test.jpg
 │   ├── test2.jpg
@@ -108,4 +113,4 @@ Software_Engine/
 
 ## 📝 Notes
 
-본 프로젝트는 소프트웨어공학 수업의 팀 프로젝트로, 학습 목적의 데모 애플리케이션입니다. DB 접속 정보는 예시 값이며 실제 배포 환경에서는 별도의 환경변수 처리가 필요합니다.
+본 프로젝트는 소프트웨어공학 수업의 팀 프로젝트로, 학습 목적의 데모 애플리케이션입니다. DB 접속 정보는 예시 값이며 실제 배포 환경에서는 별도의 환경변수 처리가 필요합니다. 로컬에서 빠르게 데모를 돌려보려면 `schema.sql`을 먼저 실행하세요.
