@@ -1,9 +1,9 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from tkinter import messagebox
-from getMenu_control import *
-from Choiced_menu_boundary import *
-from Cart_boundary import *
+from control.get_menu_control import *
+from boundary.choiced_menu_boundary import *
+from boundary.cart_boundary import *
 
 class User_main:
     
@@ -151,7 +151,7 @@ class User_main:
     # 주문목록 버튼 이벤트
     def orderlistui_event(self):
         print("주문목록 화면이 열림")
-        from User_Order_Rist_boundary import UserOrderRist
+        from boundary.user_order_rist_boundary import UserOrderRist
         order_window = UserOrderRist(table_number=1)  # 실제 테이블 번호 연동 가능
         order_window.run()  
 

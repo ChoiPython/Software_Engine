@@ -1,7 +1,7 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from getMenu_control import *
-from Choiced_Menu_control import *
+from control.get_menu_control import *
+from control.choiced_menu_control import *
 from tkinter import messagebox
 
 class Choiced_menu_boundary:

@@ -1,10 +1,10 @@
 from tkinter import *
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
-# from Option_add_boundary import OptionPopup  # 옵션창 코드 import
-from Menu_adj_control import *  # 메뉴 등록 컨트롤러 import
-from Administer_main_boundary import *
-from getMenu_control import *
+# from boundary.option_add_boundary import OptionPopup  # 옵션창 코드 import
+from control.menu_adj_control import *  # 메뉴 등록 컨트롤러 import
+from boundary.administer_main_boundary import *
+from control.get_menu_control import *
 
 # 플레이스홀더 Entry 클래스
 class PlaceholderEntry(Entry):

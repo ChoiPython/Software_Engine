@@ -1,4 +1,4 @@
-from User_main_boundary import *
+from boundary.user_main_boundary import *
 
 
 class Choiced_Menu_control:

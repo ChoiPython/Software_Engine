@@ -27,16 +27,16 @@
 ## 🏗️ Architecture — BCE Pattern
 
 ```
-Boundary (화면/UI)                Control (비즈니스 로직·DB 접근)
+boundary/                         control/
 ─────────────────────            ─────────────────────
-User_main_boundary          ──▶  getMenu_control
-Choiced_menu_boundary       ──▶  Choiced_Menu_control
-Cart_boundary                ──▶  Order_control
-Menu_add_boundary            ──▶  Menu_add_control
-Menu_adj_boundary/main       ──▶  Menu_adj_control
-Menu_del_boundary            ──▶  Menu_del_control
-Administer_main_boundary
-User_Order_Rist_boundary
+user_main_boundary           ──▶  get_menu_control
+choiced_menu_boundary        ──▶  choiced_menu_control
+cart_boundary                 ──▶  order_control
+menu_add_boundary             ──▶  menu_add_control
+menu_adj_boundary/main        ──▶  menu_adj_control
+menu_del_boundary             ──▶  menu_del_control
+administer_main_boundary
+user_order_rist_boundary
 ```
 
 - **Boundary**: 사용자가 직접 보고 조작하는 화면(Tkinter 위젯 구성, 버튼 이벤트)
@@ -60,16 +60,16 @@ User_Order_Rist_boundary
 
 팀 프로젝트 전체 217커밋 중 **72커밋으로 최다 기여**했으며, 아래 영역을 주로 담당했습니다.
 
-- `User_main_boundary.py` — 고객용 메인 화면(카테고리 탐색, 메뉴 렌더링, 장바구니 진입점) 설계 및 구현
-- `Cart_boundary.py` — 장바구니 UI 및 항목별 수량/옵션 관리
-- `Administer_main_boundary.py` — 관리자 메인 화면 구성
-- `Menu_del_boundary.py` / `Menu_del_control.py` — 메뉴 삭제 기능 (Boundary + Control 양쪽 구현)
-- `Menu_adj_main_boundary.py`, `Choiced_menu_boundary.py` — 메뉴 옵션 선택 및 조정 화면
+- `boundary/user_main_boundary.py` — 고객용 메인 화면(카테고리 탐색, 메뉴 렌더링, 장바구니 진입점) 설계 및 구현
+- `boundary/cart_boundary.py` — 장바구니 UI 및 항목별 수량/옵션 관리
+- `boundary/administer_main_boundary.py` — 관리자 메인 화면 구성
+- `boundary/menu_del_boundary.py` / `control/menu_del_control.py` — 메뉴 삭제 기능 (Boundary + Control 양쪽 구현)
+- `boundary/menu_adj_main_boundary.py`, `boundary/choiced_menu_boundary.py` — 메뉴 옵션 선택 및 조정 화면
 
 ## ▶️ 실행 방법
 
 ```bash
-pip install pymysql mysql-connector-python pillow
+pip install -r requirements.txt
 
 # MySQL에 menu / option / order_list 테이블 스키마 구성 필요 (DB명: Table_Order)
 
@@ -80,17 +80,30 @@ python main.py
 
 ```
 Software_Engine/
-├── main.py                        # 프로그램 진입점 (User_main 실행)
-├── User_main_boundary.py          # 고객 메인 화면
-├── Cart_boundary.py                # 장바구니 화면
-├── Choiced_menu_boundary.py        # 메뉴 옵션 선택 화면
-├── Administer_main_boundary.py     # 관리자 메인 화면
-├── Menu_add_boundary.py / _control.py     # 메뉴 등록
-├── Menu_adj_boundary.py / _main_boundary.py / _control.py  # 메뉴 수정
-├── Menu_del_boundary.py / _control.py     # 메뉴 삭제
-├── User_Order_Rist_boundary.py     # 주문 목록 화면
-├── Order_control.py                # 주문 저장 (DB)
-└── getMenu_control.py              # 메뉴/옵션 조회 (DB)
+├── main.py                              # 프로그램 진입점 (User_main 실행)
+├── requirements.txt
+├── assets/                              # 메뉴/기본 이미지 리소스
+│   ├── test.jpg
+│   ├── test2.jpg
+│   └── 기본이미지.jpg
+├── boundary/                            # 화면(UI) 계층
+│   ├── user_main_boundary.py            # 고객 메인 화면
+│   ├── cart_boundary.py                 # 장바구니 화면
+│   ├── choiced_menu_boundary.py         # 메뉴 옵션 선택 화면
+│   ├── administer_main_boundary.py      # 관리자 메인 화면
+│   ├── menu_add_boundary.py             # 메뉴 등록 화면
+│   ├── menu_adj_boundary.py             # 메뉴 수정 화면
+│   ├── menu_adj_main_boundary.py        # 메뉴 수정 목록 화면
+│   ├── menu_del_boundary.py             # 메뉴 삭제 화면
+│   ├── option_add_boundary.py           # 옵션 등록 화면
+│   └── user_order_rist_boundary.py      # 주문 목록 화면
+└── control/                             # 비즈니스 로직 / DB 접근 계층
+    ├── get_menu_control.py              # 메뉴/옵션 조회 (DB)
+    ├── choiced_menu_control.py          # 장바구니 담기 로직
+    ├── menu_add_control.py              # 메뉴 등록 (DB)
+    ├── menu_adj_control.py              # 메뉴 수정 (DB)
+    ├── menu_del_control.py              # 메뉴 삭제 (DB)
+    └── order_control.py                 # 주문 저장 (DB)
 ```
 
 ## 📝 Notes

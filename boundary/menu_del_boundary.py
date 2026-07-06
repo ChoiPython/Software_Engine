@@ -1,7 +1,7 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from getMenu_control import *
-from Menu_del_control import *
+from control.get_menu_control import *
+from control.menu_del_control import *
 from tkinter import messagebox
 
 class Menu_del:
