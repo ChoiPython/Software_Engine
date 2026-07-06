@@ -1,98 +1,118 @@
-# 🍽️ 무인 주문 키오스크 시스템 (Table Order Kiosk)
+# 🍱 마요네즈 키오스크 — 일식집 테이블 오더 시스템
 
-**소프트웨어공학 팀 프로젝트 — BCE(Boundary-Control-Entity) 아키텍처 기반 매장 주문 관리 시스템**
+**소프트웨어공학 팀 프로젝트 (2025-1학기) — UP(통합 프로세스) 모델 기반 요구분석·설계·구현 전 과정 수행**
 
 <br>
 
 <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white">
 <img src="https://img.shields.io/badge/Tkinter-GUI-4B8BBE?style=for-the-badge">
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
-<img src="https://img.shields.io/badge/Pillow-image_processing-306998?style=for-the-badge">
+<img src="https://img.shields.io/badge/UML-BCE_Pattern-orange?style=for-the-badge">
+
+> 소프트웨어공학 2분반 4조 · 컴퓨터공학과 · 지도교수 장성진 · 2025.06.12 제출
+> **최주영(팀장)** · 강지훈 · 이지훈 · 이태욱 · 정형우
 
 ---
 
-## 📌 Project Overview
+## 📌 프로젝트 개요
 
-매장에서 흔히 볼 수 있는 **무인 주문 키오스크**를 소프트웨어공학 수업에서 배운 **BCE(Boundary-Control-Entity) 설계 패턴**에 따라 구현한 팀 프로젝트입니다. 고객용 주문 화면과 관리자용 메뉴/옵션 관리 화면을 분리하여, 실제 매장 운영 흐름(주문 → 장바구니 → 결제 요청 / 메뉴 등록·수정·삭제)을 GUI로 구현했습니다.
+현대 외식업계는 비대면 서비스 수요 증가로 키오스크 도입이 늘고 있지만, 실제 이용자의 **46.6%가 이용 중 불편·피해를 경험**했고 **84.8%가 기능 개선이 필요하다고 응답**했습니다(농림축산식품부 외식업체 경영실태 조사). 이 문제의식에서 출발해, 일식집을 위한 **양방향 소통형 테이블 키오스크**를 기획했습니다.
 
-## ⚙️ Technology Stack
+- 손님: 태블릿으로 메뉴 조회 → 장바구니 → 주문/결제 요청
+- 관리자: 자리에서 메뉴 등록·수정·삭제, 매출 확인, 주문 현황 실시간 조회
 
-| 분류 | 기술 | 역할 |
+이 저장소는 **코드보다 "왜 이렇게 설계했는가"에 초점**을 맞춘 소프트웨어공학 수업의 산출물입니다. 아래 모든 설계 결정은 `docs/` 폴더의 원본 문서에서 그대로 확인할 수 있습니다.
+
+## 🙋 본인 역할 — 팀장(Team Lead)
+
+| 구분 | 내용 |
+|---|---|
+| 문서 작업 | 계획서·요구사항명세서·설계서 작성 및 전체 검토·조율 |
+| 설계 | 클래스 구조 설계, 유스케이스/시퀀스 다이어그램 작성 |
+| 구현 | 핵심 기능 코딩 (User 메인 화면, 장바구니, 관리자 메인 화면, 메뉴 삭제 로직 등) |
+| 협업 | 5인 팀 진행상황 조율, 전체 217커밋 중 **72커밋(최다 기여)** |
+
+> "조원들의 아이디어를 적극 수용하면서도 전체적인 방향성을 잃지 않도록 프로젝트를 이끌었다는 점은 매우 의미 있는 경험이었습니다." — 최종보고서 소감문 중
+
+## 🧭 개발 프로세스 — 왜 UP(통합 프로세스) 모델을 택했는가
+
+기획 단계에서 **나선형 모델**을 먼저 검토했습니다. 나선형 모델은 반복마다 위험 분석을 수행해 리스크에 강하지만, 프로젝트 규모 대비 반복적인 위험 분석이 과도한 오버헤드가 될 것으로 판단해 제외했습니다.
+
+대신 **UP 모델**을 채택했습니다 — 신규 오픈 매장이라 요구사항이 유동적일 수밖에 없는 상황에서, 유스케이스 기반으로 점진적으로 기능을 확정해 나가면서도 나선형 모델보다 가볍게 진행할 수 있었기 때문입니다.
+
+- **초기 계획** → **도입(요구사항 분석)** → **상세(설계)** → **구축(개발+테스트)** → **이행** 5단계로 WBS 구성
+- 간트 차트 기준 도입~상세 5주, 구축 7주로 일정 수립
+- 기능점수(FP) 산정: **FP 93.0 × 42줄/FP ≈ 3,906 LOC**, 개발 인월 9.58 → 5인 기준 **약 8주 소요 산정** (실제 진행 기간과 유사)
+- 팀 구조는 서로의 의견을 적극 반영하기 위해 **민주적 팀 구조**로 운영
+
+## 📋 요구사항 분석 — 10개 유스케이스
+
+시나리오 문서에서 정의한 유스케이스는 기본 흐름·대안 흐름·예외 상황·사후 조건까지 표 형식으로 명세했습니다 (`docs/req_*.hwp`).
+
+| ID | 유스케이스 | 주 행위자 |
 |---|---|---|
-| GUI | Python Tkinter | 고객/관리자 화면 렌더링 및 이벤트 처리 |
-| Image | Pillow (PIL) | 메뉴 이미지, 장바구니 썸네일 처리 |
-| Database | MySQL (PyMySQL / mysql-connector) | 메뉴, 옵션, 주문 데이터 CRUD |
-| Design | BCE Pattern | 화면(Boundary)과 로직(Control)의 책임 분리 |
+| US-M01 | 메뉴 선택 (카테고리 조회 → 옵션/수량 선택 → 장바구니 담기) | 사용자 |
+| US-M02 | 장바구니 수정 | 사용자 |
+| US-M04 | 주문 목록 조회 (결제 내역 확인) | 사용자 |
+| AD-M01 | 메뉴 등록 (사진·가격·옵션 포함) | 관리자 |
+| AD-M02 | 메뉴 수정 | 관리자 |
+| AD-M03 | 메뉴 삭제 | 관리자 |
+| AD-M06 | 카테고리 삭제 | 관리자 |
+| AD-M08 | 주문 현황 조회 (테이블별) | 관리자 |
+| — | 카테고리 등록 / 수정 | 관리자 |
 
-## 🏗️ Architecture — BCE Pattern
+예외 상황까지 상세하게 다뤘습니다. 예를 들어 메뉴 선택 시나리오는 "품절 메뉴 선택", "장바구니 저장 실패", "사용자가 오래 조작하지 않아 세션이 만료된 경우" 같은 엣지 케이스까지 대안 흐름으로 정의했습니다.
+
+## 🏗️ 시스템 설계
+
+### 아키텍처
+클라이언트-서버 구조를 기반으로, 실제 구현에서는 **BCE(Boundary-Control-Entity) 패턴**으로 클래스를 분리했습니다.
 
 ```
-Boundary (화면/UI)                Control (비즈니스 로직·DB 접근)
-─────────────────────            ─────────────────────
-User_main_boundary          ──▶  getMenu_control
-Choiced_menu_boundary       ──▶  Choiced_Menu_control
-Cart_boundary                ──▶  Order_control
-Menu_add_boundary            ──▶  Menu_add_control
-Menu_adj_boundary/main       ──▶  Menu_adj_control
-Menu_del_boundary            ──▶  Menu_del_control
-Administer_main_boundary
-User_Order_Rist_boundary
+Boundary (화면)              Control (로직/DB)           Entity
+──────────────────           ──────────────────          ─────────
+User_main                →   getMenu_control
+Choice_Menu(장바구니)     →   Choiced_Menu_control
+Cart_Adj(장바구니 수정)   →   Order_control
+Menu_Add                 →   Menu_add_control
+Menu_Adj                 →   Menu_adj_control
+Menu_del                 →   Menu_del_control
+Category_ad
+User_Order_rist
+Admin_Order_List(관리)                                    Table_num
 ```
 
-- **Boundary**: 사용자가 직접 보고 조작하는 화면(Tkinter 위젯 구성, 버튼 이벤트)
-- **Control**: 화면 뒤에서 MySQL과 통신하며 실제 데이터 처리(조회/삽입/수정/삭제)를 담당
+### 데이터베이스 설계
+8개 테이블로 정규화: `Category`, `Menu`, `Option`, `Eval`(평점/리뷰), `OrderList`, `Sales`(일별 매출), `account`(관리자 로그인), `Table_num`
 
-## 🚀 Key Features
-
-**고객(User) 화면**
-- 카테고리별 메뉴 조회 (스크롤 가능한 그리드 레이아웃)
-- 메뉴 담기 → 옵션 선택 → 장바구니 반영
-- 장바구니 확인/수정, 주문 목록 조회, 결제 요청
-
-**관리자(Administer) 화면**
-- 메뉴 등록 / 수정 / 삭제
-- 옵션 등록 및 관리
-
-**공통**
-- MySQL 연동으로 메뉴·옵션·주문 데이터 실시간 반영
-
-## 🙋 My Role (본인 담당)
-
-팀 프로젝트 전체 217커밋 중 **72커밋으로 최다 기여**했으며, 아래 영역을 주로 담당했습니다.
-
-- `User_main_boundary.py` — 고객용 메인 화면(카테고리 탐색, 메뉴 렌더링, 장바구니 진입점) 설계 및 구현
-- `Cart_boundary.py` — 장바구니 UI 및 항목별 수량/옵션 관리
-- `Administer_main_boundary.py` — 관리자 메인 화면 구성
-- `Menu_del_boundary.py` / `Menu_del_control.py` — 메뉴 삭제 기능 (Boundary + Control 양쪽 구현)
-- `Menu_adj_main_boundary.py`, `Choiced_menu_boundary.py` — 메뉴 옵션 선택 및 조정 화면
+### 시퀀스 다이어그램
+아래 5개 시나리오에 대해 객체 간 상호작용을 시퀀스 다이어그램으로 설계했습니다 — 메뉴 등록 / 메뉴 수정 / 메뉴 삭제 / 사용자 주문 목록 조회 / (관리자) 메뉴 삭제. 원본은 `docs/3_설계보고서.hwpx`와 StarUML 원본 파일(`docs/3_시퀀스다이어그램.uml`)에서 확인 가능합니다.
 
 ## ▶️ 실행 방법
 
 ```bash
 pip install pymysql mysql-connector-python pillow
-
-# MySQL에 menu / option / order_list 테이블 스키마 구성 필요 (DB명: Table_Order)
+# MySQL에 Category / Menu / Option / Eval / OrderList / Sales / account / Table_num 테이블 구성 필요
 
 python main.py
 ```
 
-## 📂 Directory Structure
+## 📂 설계 산출물 (docs/)
 
-```
-Software_Engine/
-├── main.py                        # 프로그램 진입점 (User_main 실행)
-├── User_main_boundary.py          # 고객 메인 화면
-├── Cart_boundary.py                # 장바구니 화면
-├── Choiced_menu_boundary.py        # 메뉴 옵션 선택 화면
-├── Administer_main_boundary.py     # 관리자 메인 화면
-├── Menu_add_boundary.py / _control.py     # 메뉴 등록
-├── Menu_adj_boundary.py / _main_boundary.py / _control.py  # 메뉴 수정
-├── Menu_del_boundary.py / _control.py     # 메뉴 삭제
-├── User_Order_Rist_boundary.py     # 주문 목록 화면
-├── Order_control.py                # 주문 저장 (DB)
-└── getMenu_control.py              # 메뉴/옵션 조회 (DB)
-```
+전체 개발 프로세스를 그대로 볼 수 있도록 UP 모델의 각 단계별 산출물을 원본 그대로 첨부했습니다.
+
+| 파일 | 내용 |
+|---|---|
+| `1_프로젝트계획서.hwp` | 주제/목표, 시장 분석, 개발 모델 선정 근거, WBS, 간트 차트, 비용(FP) 산정 |
+| `1_프로젝트계획서_발표자료.pptx` | 계획서 발표 슬라이드 |
+| `req_01~10_*.hwp(x)` | 유스케이스 시나리오 10건 (기본/대안/예외 흐름) |
+| `3_설계보고서.hwpx` | 클래스 다이어그램·클래스 명세서, 시퀀스 다이어그램, ER 다이어그램, 테이블 설계 |
+| `3_시퀀스다이어그램.uml` | 시퀀스 다이어그램 원본 (StarUML) |
+| `4_최종보고서.hwpx` | 계획서~구현~실행결과 전체 통합 보고서, 팀원별 소감문 |
+| `4_최종발표자료.pptx` | 최종 발표 슬라이드 (실행 화면 스크린샷 다수 포함) |
+
+> ⚠️ `.hwp`/`.hwpx`는 한글과컴퓨터(한글 뷰어)로, `.uml`은 StarUML 등에서 열립니다.
 
 ## 📝 Notes
 
-본 프로젝트는 소프트웨어공학 수업의 팀 프로젝트로, 학습 목적의 데모 애플리케이션입니다. DB 접속 정보는 예시 값이며 실제 배포 환경에서는 별도의 환경변수 처리가 필요합니다.
+소프트웨어공학 수업의 학습 목적 프로젝트로, DB 접속 정보는 예시 값입니다.
